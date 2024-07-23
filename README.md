@@ -25,6 +25,8 @@ For `tap_action` options, see https://www.home-assistant.io/dashboards/actions/.
   background_color: yellow # a color name, rgb hex or rgba function when an image is not provided (optional)
   camera_image: camera.living_room # a camera entity to use as background (optional)
   camera_view: 'auto' # auto, live (optional)
+  icon: mdi:sofa
+  show_area_icon: true # boolean (optional), default true
   shadow: true # Draws a drop shadow on icons (optional)
   hide_unavailable: false # Hide unavailable entities (optional)
   state_color: true # enable or disable HA colors for all entities

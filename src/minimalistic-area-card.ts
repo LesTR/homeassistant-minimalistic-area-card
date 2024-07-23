@@ -218,7 +218,7 @@ class MinimalisticAreaCard extends LitElement {
             </div>` : null}
 
             <div class="box">
-                <div class="card-header">${this.config.title}</div>
+                <div class="card-header">${this.renderAreaIcon(this.config)}${this.config.title}</div>
                 <div class="sensors">
                     ${this._entitiesSensor.map((entityConf) => this.renderEntity(entityConf, true, true))}
                 </div>
@@ -229,6 +229,15 @@ class MinimalisticAreaCard extends LitElement {
             </div>
         </ha-card>
     `;
+    }
+
+    renderAreaIcon(areaConfig: MinimalisticAreaCardConfig) {
+        if (getOrDefault(areaConfig.icon, "").trim().length == 0 || !getOrDefault(areaConfig.show_area_icon, true)) {
+            return ""
+        }
+        return html`
+        <ha-icon icon=${ifDefined(areaConfig.icon)}></ha-icon>
+        `;
     }
 
     renderEntity(
@@ -682,6 +691,10 @@ class MinimalisticAreaCard extends LitElement {
       }
     `;
     }
+}
+
+function getOrDefault(value: any, defaultValue) : any{
+   return value == undefined ? defaultValue : value
 }
 
 customElements.define(cardType, MinimalisticAreaCard);
