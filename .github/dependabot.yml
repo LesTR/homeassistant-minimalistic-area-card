@@ -5,3 +5,9 @@ updates:
     schedule:
       interval: daily
       time: "06:00"
+
+  # Maintain dependencies for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
