@@ -59,7 +59,7 @@ For `tap_action` options, see https://www.home-assistant.io/dashboards/actions/.
 
 State based settings:
 ```yaml
-states: # array of values
+state: # array of values
   - value: value #state value to match
     icon: mdi:my-icon" #icon used when state match
     color: color # color used when state match
