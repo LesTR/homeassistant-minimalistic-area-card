@@ -6,7 +6,7 @@ import {
     NumberFormat,
     numberFormatToLocale,
     round
-} from 'custom-card-helpers'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
+} from 'custom-card-helpers/dist'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
 import { css, html, LitElement } from 'lit';
 import { classMap } from 'lit/directives/class-map';
 import { ifDefined } from "lit/directives/if-defined";
@@ -14,7 +14,7 @@ import { actionHandler } from './action-handler-directive';
 import { findEntities } from './find-entities';
 import { cardType, EntityRegistryDisplayEntry, HomeAssistantArea, HomeAssistantExt, MinimalisticAreaCardConfig, STATES_OFF, UNAVAILABLE } from './types';
 
-import { HassEntity } from 'home-assistant-js-websocket';
+import { HassEntity } from 'home-assistant-js-websocket/dist';
 import { version as pkgVersion } from "../package.json";
 
 

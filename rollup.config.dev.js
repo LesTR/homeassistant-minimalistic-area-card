@@ -33,8 +33,11 @@ export default {
         'Access-Control-Allow-Origin': '*',
       },
     }),
-    ignore({
-      files: [...ignoreTextfieldFiles, ...ignoreSelectFiles, ...ignoreSwitchFiles].map((file) => require.resolve(file)),
-    }),
+    ignore([
+      '@material/web',
+      ...ignoreSelectFiles,
+      ...ignoreSwitchFiles,
+      ...ignoreTextfieldFiles,
+    ], { commonjsBugFix: true }),
   ],
 };

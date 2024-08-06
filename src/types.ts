@@ -1,4 +1,4 @@
-import { ActionConfig, EntityConfig, HomeAssistant, LovelaceCard, LovelaceCardConfig, LovelaceCardEditor, STATES_OFF as STATES_OFF_HELPER } from 'custom-card-helpers';
+import { ActionConfig, EntityConfig, HomeAssistant, LovelaceCard, LovelaceCardConfig, LovelaceCardEditor, STATES_OFF as STATES_OFF_HELPER } from 'custom-card-helpers/dist';
 import { name } from "../package.json";
 declare global {
   interface HTMLElementTagNameMap {
