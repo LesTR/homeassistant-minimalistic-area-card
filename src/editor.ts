@@ -2,16 +2,11 @@
 import { fireEvent, HomeAssistant, LovelaceCardEditor } from 'custom-card-helpers';
 import { css, CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
-import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
-import { customElement, property, state } from 'lit/decorators';
-import { formfieldDefinition } from '../elements/formfield';
-import { selectDefinition } from '../elements/select';
-import { switchDefinition } from '../elements/switch';
-import { textfieldDefinition } from '../elements/textfield';
+import { customElement, property, state } from 'lit/decorators.js';
 import { MinimalisticAreaCardConfig } from './types';
 
 @customElement('boilerplate-card-editor')
-export class BoilerplateCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
+export class BoilerplateCardEditor extends LitElement implements LovelaceCardEditor {
   @property({ attribute: false }) public hass?: HomeAssistant;
 
   @state() private _config?: MinimalisticAreaCardConfig;
@@ -19,13 +14,6 @@ export class BoilerplateCardEditor extends ScopedRegistryHost(LitElement) implem
   @state() private _helpers?: any;
 
   private _initialized = false;
-
-  static elementDefinitions = {
-    ...textfieldDefinition,
-    ...selectDefinition,
-    ...switchDefinition,
-    ...formfieldDefinition,
-  };
 
   public setConfig(config: MinimalisticAreaCardConfig): void {
     this._config = config;
@@ -47,6 +35,10 @@ export class BoilerplateCardEditor extends ScopedRegistryHost(LitElement) implem
 
   get _entity(): string {
     return this._config?.entity || '';
+  }
+
+  get _area(): string {
+    return this._config?.area || '';
   }
 
   get _show_warning(): boolean {
