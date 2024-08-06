@@ -214,7 +214,7 @@ class MinimalisticAreaCard extends LitElement {
                     .cameraImage=${this.config.camera_image}
                     .entity=${this.config.camera_image}
                     .cameraView=${this.config.camera_view || "auto"}
-                    .width="100%"></hui-image>
+                    .width=${'100%'}></hui-image>
             </div>` : null}
 
             <div class="box">
