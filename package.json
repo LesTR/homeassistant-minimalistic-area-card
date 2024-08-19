@@ -45,7 +45,7 @@
     "rollup-plugin-ignore": "^1.0.10",
     "tslib": "2.6.3",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.1.0"
+    "typescript-eslint": "^8.2.0"
   },
   "scripts": {
     "start": "rollup -c rollup.config.dev.mjs --watch",
