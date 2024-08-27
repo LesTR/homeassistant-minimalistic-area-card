@@ -43,7 +43,7 @@
     "@rollup/plugin-typescript": "^11.1.6",
     "rollup-plugin-serve": "^3.0.0",
     "rollup-plugin-ignore": "^1.0.10",
-    "tslib": "2.6.3",
+    "tslib": "2.7.0",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.2.0"
   },
