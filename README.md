@@ -62,9 +62,10 @@ For `tap_action` options, see https://www.home-assistant.io/dashboards/actions/.
 State based settings:
 ```yaml
 state: # array of values
-  - value: value #state value to match
-    icon: mdi:my-icon" #icon used when state match
+  - value: value # state value to match
+    icon: mdi:my-icon" # entity icon used when state match
     color: color # color used when state match
+    hide: false # Default false, conditionally hide the entity when state match given value
 ```
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/junalmeida/homeassistant-minimalistic-area-card.svg?style=for-the-badge

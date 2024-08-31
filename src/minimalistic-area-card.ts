@@ -54,6 +54,7 @@ type EntityStateConfig = {
     value: string;
     icon?: string;
     color?: string;
+    hide?: boolean
 }
 
 const createEntityNotFoundWarning = (
@@ -284,6 +285,7 @@ class MinimalisticAreaCard extends LitElement {
 
         let icon = entityConf.icon
         let color = entityConf.color
+        let hide = false
 
         if (entityConf.state !== undefined && entityConf.state.length > 0) {
             const currentState = this.computeStateValue(stateObj, entity)
@@ -295,7 +297,11 @@ class MinimalisticAreaCard extends LitElement {
                 if (stateConfig.color !== undefined) {
                     color = stateConfig.color
                 }
+                hide = getOrDefault(stateConfig.hide, false)
             }
+        }
+        if (hide) {
+            return html``;
         }
 
         return html`
