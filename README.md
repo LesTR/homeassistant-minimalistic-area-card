@@ -82,6 +82,14 @@ entities:
     hide: ${return hass.states['input_boolean.heating_season'].state === 'off'}
 ```
 
+### Variables and types exposes in templates
+
+```
+this : MinimalisticAreaCard - card object
+hass : HomeAssistant - homeassistant object
+state : any - state value of given entity or null
+```
+
 [commits-shield]: https://img.shields.io/github/commit-activity/y/junalmeida/homeassistant-minimalistic-area-card.svg?style=for-the-badge
 [commits]: https://github.com/junalmeida/homeassistant-minimalistic-area-card/commits/main
 [devcontainer]: https://code.visualstudio.com/docs/remote/containers

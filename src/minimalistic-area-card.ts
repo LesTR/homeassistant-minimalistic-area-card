@@ -261,7 +261,7 @@ class MinimalisticAreaCard extends LitElement {
     }
 
     renderAreaIcon(areaConfig: MinimalisticAreaCardConfig) {
-        if (this._getOrDefault(areaConfig.icon, "").trim().length == 0 || !this._getOrDefault(areaConfig.show_area_icon, true)) {
+        if (this._getOrDefault(null, areaConfig.icon, "").trim().length == 0 || !this._getOrDefault(null, areaConfig.show_area_icon, true)) {
             return ""
         }
         return html`
@@ -293,8 +293,9 @@ class MinimalisticAreaCard extends LitElement {
             show_state: show_state,
             ...entityConf,
         };
+        const entityId = entity.entity_id
 
-        if (this._getOrDefault(entityConf.hide, false)) {
+        if (this._getOrDefault(entityId, entityConf.hide, false)) {
             return html``;
         }
 
@@ -323,13 +324,9 @@ class MinimalisticAreaCard extends LitElement {
             const currentState = this.computeStateValue(stateObj, entity)
             const stateConfig = entityConf.state.filter((i) => i.value == currentState)[0]
             if (stateConfig) {
-                if (stateConfig.icon !== undefined) {
-                    icon = stateConfig.icon
-                }
-                if (stateConfig.color !== undefined) {
-                    color = stateConfig.color
-                }
-                hide = this._getOrDefault(stateConfig.hide, false)
+                icon = this._getOrDefault(entityId, stateConfig.icon, entityConf.icon)
+                color = this._getOrDefault(entityId,stateConfig.color, entityConf.color)
+                hide = this._getOrDefault(entityId, stateConfig.hide, false)
             }
         }
         if (hide) {
@@ -517,16 +514,18 @@ class MinimalisticAreaCard extends LitElement {
         return false;
     }
 
-     _evalTemplate(func: string) {
+     _evalTemplate(entity: string|null, func: string) {
         /* eslint no-new-func: 0 */
         try {
             return new Function(
                 'hass',
+                'state',
                 'html',
                 `'use strict'; ${func}`,
             ).call(
                 this,
                 this.hass,
+                entity != null ? this.hass.states[entity].state: null,
                 html,
             );
         } catch (e: any) {
@@ -537,14 +536,14 @@ class MinimalisticAreaCard extends LitElement {
         }
     }
 
-    _getOrDefault(value: any, defaultValue) : any {
+    _getOrDefault(entity: string|null, value: any, defaultValue) : any {
         if (value == undefined) {
             return defaultValue;
         }
         if (typeof value === 'string') {
             const trimmed = value.trim()
             if (trimmed.startsWith("${") && trimmed.endsWith("}")) {
-                return this._evalTemplate(trimmed.slice(2, -1))
+                return this._evalTemplate(entity, trimmed.slice(2, -1))
             }
         }
         return value;
