@@ -28,7 +28,6 @@ For `tap_action` options, see https://www.home-assistant.io/dashboards/actions/.
   icon: mdi:sofa
   show_area_icon: true # boolean (optional), default true
   shadow: true # Draws a drop shadow on icons (optional)
-  hide: false # Hide entity
   hide_unavailable: false # Hide unavailable entities (optional)
   state_color: true # enable or disable HA colors for all entities
   tap_action:
