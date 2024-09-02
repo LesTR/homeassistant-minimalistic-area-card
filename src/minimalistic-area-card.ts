@@ -45,6 +45,7 @@ type ExtendedEntityConfig = EntitiesCardEntityConfig & {
     prefix?: string;
     suffix?: string;
     show_state?: boolean;
+    hide?: boolean;
     attribute?: string;
     color?: string;
     state?: EntityStateConfig[];
@@ -80,6 +81,7 @@ class MinimalisticAreaCard extends LitElement {
     private config!: MinimalisticAreaCardConfig;
     private area?: HomeAssistantArea;
     private areaEntities?: string[];
+    private _templatedEntityNameRegexp = RegExp(/["']((input_([^.]+)|(binary_)?sensor|number|switch|fan|light|climate)\.[a-z_]+)["']/, "gmsid")
 
     override async performUpdate() {
         this.setArea();
@@ -113,11 +115,13 @@ class MinimalisticAreaCard extends LitElement {
     _entitiesDialog: Array<ExtendedEntityConfig> = [];
     _entitiesToggle: Array<ExtendedEntityConfig> = [];
     _entitiesSensor: Array<ExtendedEntityConfig> = [];
+    _entitiesTemplated: Array<ExtendedEntityConfig> = [];
 
     setEntities() {
         this._entitiesDialog = [];
         this._entitiesToggle = [];
         this._entitiesSensor = [];
+        this._entitiesTemplated = [];
 
         const entities = this.config?.entities || this.areaEntities || [];
 
@@ -138,6 +142,9 @@ class MinimalisticAreaCard extends LitElement {
                 this._entitiesToggle.push(entity);
             }
         });
+        if (this.config) {
+            this._parseTemplatedEntities(this.config)
+        }
     }
 
     parseEntity(item: ExtendedEntityConfig | string) {
@@ -158,6 +165,26 @@ class MinimalisticAreaCard extends LitElement {
         const parent = ((ev.currentTarget as HTMLElement).getRootNode() as any)?.host?.parentElement as HTMLElement;
         if (this.hass && this.config && ev.detail.action && (!parent || parent.tagName !== "HUI-CARD-PREVIEW")) {
             handleAction(this, this.hass, this.config, ev.detail.action);
+        }
+    }
+
+    _parseTemplatedEntities(obj) {
+        const type = typeof obj;
+        if (type == 'object') {
+            Object.keys(obj).forEach(key => {
+                this._parseTemplatedEntities(obj[key])
+            })
+        } else if (type == 'string' && obj.trim().startsWith("${") && obj.trim().endsWith("}")) {
+            const entities = [...obj.trim().matchAll(this._templatedEntityNameRegexp)]
+            entities?.forEach(match => {
+                if (match[1] != undefined && (match[1] in this.hass.states)) {
+                    const entityConf = this.parseEntity(match[1])
+                    const founded = this._entitiesTemplated.filter((i) => i.entity == entityConf.entity)
+                    if (founded.length == 0) {
+                        this._entitiesTemplated.push(entityConf)
+                    }
+                }
+            })
         }
     }
     // The user supplied configuration. Throw an exception and Home Assistant
@@ -188,6 +215,7 @@ class MinimalisticAreaCard extends LitElement {
         if (!this.config || !this.hass) {
             return html``;
         }
+
         const background_color = this.config.background_color ? `background-color: ${this.config.background_color}` : "";
         let imageUrl: string | undefined = undefined;
         if (!this.config.camera_image && (this.config.image || this.area?.picture)) {
@@ -233,7 +261,7 @@ class MinimalisticAreaCard extends LitElement {
     }
 
     renderAreaIcon(areaConfig: MinimalisticAreaCardConfig) {
-        if (getOrDefault(areaConfig.icon, "").trim().length == 0 || !getOrDefault(areaConfig.show_area_icon, true)) {
+        if (this._getOrDefault(areaConfig.icon, "").trim().length == 0 || !this._getOrDefault(areaConfig.show_area_icon, true)) {
             return ""
         }
         return html`
@@ -266,6 +294,10 @@ class MinimalisticAreaCard extends LitElement {
             ...entityConf,
         };
 
+        if (this._getOrDefault(entityConf.hide, false)) {
+            return html``;
+        }
+
         if ((!stateObj || stateObj.state === UNAVAILABLE) && !this.config.hide_unavailable) {
             return html`
             <div class="wrapper">
@@ -297,7 +329,7 @@ class MinimalisticAreaCard extends LitElement {
                 if (stateConfig.color !== undefined) {
                     color = stateConfig.color
                 }
-                hide = getOrDefault(stateConfig.hide, false)
+                hide = this._getOrDefault(stateConfig.hide, false)
             }
         }
         if (hide) {
@@ -474,8 +506,7 @@ class MinimalisticAreaCard extends LitElement {
         ) {
             return true;
         }
-
-        for (const entity of [...this._entitiesDialog, ...this._entitiesToggle, ...this._entitiesSensor]) {
+        for (const entity of [...this._entitiesDialog, ...this._entitiesToggle, ...this._entitiesSensor, ...this._entitiesTemplated]) {
             if (
                 oldHass.states[entity.entity] !== this.hass.states[entity.entity]
             ) {
@@ -484,6 +515,39 @@ class MinimalisticAreaCard extends LitElement {
         }
 
         return false;
+    }
+
+     _evalTemplate(func: string) {
+        /* eslint no-new-func: 0 */
+        try {
+            return new Function(
+                'hass',
+                'html',
+                `'use strict'; ${func}`,
+            ).call(
+                this,
+                this.hass,
+                html,
+            );
+        } catch (e: any) {
+          const funcTrimmed = func.length <= 100 ? func.trim() : `${func.trim().substring(0, 98)}...`;
+          e.message = `${e.name}: ${e.message} in '${funcTrimmed}'`;
+          e.name = 'MinimalistAreaCardJSTemplateError';
+          throw e;
+        }
+    }
+
+    _getOrDefault(value: any, defaultValue) : any {
+        if (value == undefined) {
+            return defaultValue;
+        }
+        if (typeof value === 'string') {
+            const trimmed = value.trim()
+            if (trimmed.startsWith("${") && trimmed.endsWith("}")) {
+                return this._evalTemplate(trimmed.slice(2, -1))
+            }
+        }
+        return value;
     }
 
     static findAreaEntities(hass: HomeAssistantExt, area_id: string) {
@@ -699,9 +763,7 @@ class MinimalisticAreaCard extends LitElement {
     }
 }
 
-function getOrDefault(value: any, defaultValue) : any{
-   return value == undefined ? defaultValue : value
-}
+
 
 customElements.define(cardType, MinimalisticAreaCard);
 

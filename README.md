@@ -28,6 +28,7 @@ For `tap_action` options, see https://www.home-assistant.io/dashboards/actions/.
   icon: mdi:sofa
   show_area_icon: true # boolean (optional), default true
   shadow: true # Draws a drop shadow on icons (optional)
+  hide: false # Hide entity
   hide_unavailable: false # Hide unavailable entities (optional)
   state_color: true # enable or disable HA colors for all entities
   tap_action:
@@ -60,12 +61,26 @@ For `tap_action` options, see https://www.home-assistant.io/dashboards/actions/.
 ```
 
 State based settings:
+
 ```yaml
 state: # array of values
   - value: value # state value to match
     icon: mdi:my-icon" # entity icon used when state match
     color: color # color used when state match
     hide: false # Default false, conditionally hide the entity when state match given value
+```
+
+## Templating support (experimental)
+
+You can use experimental support for templating that allows you to create a dynamic value based on the state or other attribute of any entity.
+Everything inside `${}` is now evaluated as a template.
+
+Example:
+
+```yaml
+entities:
+  - entity: climate.bedroom_thermostat_thermostat
+    hide: ${return hass.states['input_boolean.heating_season'].state === 'off'}
 ```
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/junalmeida/homeassistant-minimalistic-area-card.svg?style=for-the-badge
