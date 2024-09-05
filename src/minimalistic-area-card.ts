@@ -169,6 +169,9 @@ class MinimalisticAreaCard extends LitElement {
     }
 
     _parseTemplatedEntities(obj) {
+        if (obj == null || obj == undefined) {
+            return;
+        }
         const type = typeof obj;
         if (type == 'object') {
             Object.keys(obj).forEach(key => {
