@@ -82,11 +82,14 @@ class MinimalisticAreaCard extends LitElement {
     private area?: HomeAssistantArea;
     private areaEntities?: string[];
     private _templatedEntityNameRegexp = RegExp(/["']((input_([^.]+)|(binary_)?sensor|number|switch|fan|light|climate)\.[a-z_]+)["']/, "gmsid")
+    private configChanged = true
+    private previowsAreaEntitiesCount = 0;
 
     override async performUpdate() {
         this.setArea();
         this.setEntities();
         await super.performUpdate();
+        this.configChanged = false;
     }
 
     setArea() {
@@ -118,6 +121,10 @@ class MinimalisticAreaCard extends LitElement {
     _entitiesTemplated: Array<ExtendedEntityConfig> = [];
 
     setEntities() {
+        if (!this.configChanged && this.areaEntities?.length == this.previowsAreaEntitiesCount) {
+            // Don't refresh entities unless config changed or a new entity was added into area
+            return;
+        }
         this._entitiesDialog = [];
         this._entitiesToggle = [];
         this._entitiesSensor = [];
@@ -128,18 +135,20 @@ class MinimalisticAreaCard extends LitElement {
         entities.forEach((item) => {
 
             const entity = this.parseEntity(item);
-            // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-            const [domain, _] = entity.entity.split('.');
-            if (SENSORS.indexOf(domain) !== -1 || entity.attribute) {
-                this._entitiesSensor.push(entity);
-            }
-            else if (
-                this.config?.force_dialog ||
-                DOMAINS_TOGGLE.indexOf(domain) === -1
-            ) {
-                this._entitiesDialog.push(entity);
-            } else {
-                this._entitiesToggle.push(entity);
+            if (entity != null && entity.entity != null) {
+                // eslint-disable-next-line  @typescript-eslint/no-unused-vars
+                const [domain, _] = entity.entity.split('.');
+                if (SENSORS.indexOf(domain) !== -1 || entity.attribute) {
+                    this._entitiesSensor.push(entity);
+                }
+                else if (
+                    this.config?.force_dialog ||
+                    DOMAINS_TOGGLE.indexOf(domain) === -1
+                ) {
+                    this._entitiesDialog.push(entity);
+                } else {
+                    this._entitiesToggle.push(entity);
+                }
             }
         });
         if (this.config) {
@@ -168,7 +177,7 @@ class MinimalisticAreaCard extends LitElement {
         }
     }
 
-    _parseTemplatedEntities(obj) {
+    _parseTemplatedEntities(obj: any) {
         if (obj == null || obj == undefined) {
             return;
         }
@@ -206,6 +215,7 @@ class MinimalisticAreaCard extends LitElement {
             hold_action: { action: "more-info" },
             ...config,
         };
+        this.configChanged = true;
     }
 
     // The height of your card. Home Assistant uses this to automatically
@@ -278,6 +288,9 @@ class MinimalisticAreaCard extends LitElement {
         isSensor: boolean
     ) {
         const stateObj = this.hass.states[entityConf.entity];
+        if (stateObj == undefined) {
+            return html``;
+        }
         const entity = this.hass.entities[entityConf.entity] as EntityRegistryDisplayEntry;
 
         // added for backward compatibility: hide state by default for binary_sensors
