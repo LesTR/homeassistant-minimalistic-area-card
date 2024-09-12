@@ -51,6 +51,7 @@ type ExtendedEntityConfig = EntitiesCardEntityConfig & {
     prefix?: string;
     suffix?: string;
     show_state?: boolean;
+    force_dialog?: boolean;
     hide?: boolean;
     attribute?: string;
     color?: string;
@@ -122,9 +123,8 @@ class MinimalisticAreaCard extends LitElement {
         }
     }
 
-    _entitiesDialog: Array<ExtendedEntityConfig> = [];
-    _entitiesToggle: Array<ExtendedEntityConfig> = [];
     _entitiesSensor: Array<ExtendedEntityConfig> = [];
+    _entitiesButtons: Array<EntitiesCardEntityConfig> = [];
     _entitiesTemplated: Array<ExtendedEntityConfig> = [];
 
     setEntities() {
@@ -132,9 +132,8 @@ class MinimalisticAreaCard extends LitElement {
             // Don't refresh entities unless config changed or a new entity was added into area
             return;
         }
-        this._entitiesDialog = [];
-        this._entitiesToggle = [];
         this._entitiesSensor = [];
+        this._entitiesButtons = [];
         this._entitiesTemplated = [];
 
         const entities = this.config?.entities || this.areaEntities || [];
@@ -154,14 +153,8 @@ class MinimalisticAreaCard extends LitElement {
                 }
                 if (section == EntitySection.sensors) {
                     this._entitiesSensor.push(entity);
-                }
-                else if (
-                    this.config?.force_dialog ||
-                    DOMAINS_TOGGLE.indexOf(domain) === -1
-                ) {
-                    this._entitiesDialog.push(entity);
                 } else {
-                    this._entitiesToggle.push(entity);
+                    this._entitiesButtons.push(entity);
                 }
             }
         });
@@ -276,11 +269,10 @@ class MinimalisticAreaCard extends LitElement {
             <div class="box">
                 <div class="card-header">${this.renderAreaIcon(this.config)}${this.config.title}</div>
                 <div class="sensors">
-                    ${this._entitiesSensor.map((entityConf) => this.renderEntity(entityConf, true, true))}
+                    ${this._entitiesSensor.map((entityConf) => this.renderEntity(entityConf, true))}
                 </div>
                 <div class="buttons">
-                    ${this._entitiesDialog.map((entityConf) => this.renderEntity(entityConf, true, false))}
-                    ${this._entitiesToggle.map((entityConf) => this.renderEntity(entityConf, false, false))}
+                    ${this._entitiesButtons.map((entityConf) => this.renderEntity(entityConf, false))}
                 </div>
             </div>
         </ha-card>
@@ -289,7 +281,7 @@ class MinimalisticAreaCard extends LitElement {
 
     renderAreaIcon(areaConfig: MinimalisticAreaCardConfig) {
         if (this._getOrDefault(null, areaConfig.icon, "").trim().length == 0 || !this._getOrDefault(null, areaConfig.show_area_icon, true)) {
-            return ""
+            return html``;
         }
         return html`
         <ha-icon icon=${ifDefined(areaConfig.icon)}></ha-icon>
@@ -298,7 +290,6 @@ class MinimalisticAreaCard extends LitElement {
 
     renderEntity(
         entityConf: ExtendedEntityConfig,
-        dialog: boolean,
         isSensor: boolean
     ) {
         const stateObj = this.hass.states[entityConf.entity];
@@ -306,12 +297,16 @@ class MinimalisticAreaCard extends LitElement {
             return html``;
         }
         const entity = this.hass.entities[entityConf.entity] as EntityRegistryDisplayEntry;
+        const entityId = entity.entity_id
 
-        // added for backward compatibility: hide state by default for binary_sensors
         // eslint-disable-next-line  @typescript-eslint/no-unused-vars
         const [domain, _] = stateObj.entity_id.split(".");
+
+        const dialog = this._getOrDefault(entityId, entityConf.force_dialog, false) || DOMAINS_TOGGLE.indexOf(domain) === -1
+
         let show_state = true
         if (entityConf.show_state === undefined) {
+            // added for backward compatibility: hide state by default for binary_sensors
             show_state = domain === "binary_sensor" ? false : true
         } else {
             show_state = !!entityConf.show_state
@@ -323,7 +318,6 @@ class MinimalisticAreaCard extends LitElement {
             show_state: show_state,
             ...entityConf,
         };
-        const entityId = entity.entity_id
 
         if (this._getOrDefault(entityId, entityConf.hide, false)) {
             return html``;
@@ -533,7 +527,7 @@ class MinimalisticAreaCard extends LitElement {
         ) {
             return true;
         }
-        for (const entity of [...this._entitiesDialog, ...this._entitiesToggle, ...this._entitiesSensor, ...this._entitiesTemplated]) {
+        for (const entity of [...this._entitiesButtons, ...this._entitiesSensor, ...this._entitiesTemplated]) {
             if (
                 oldHass.states[entity.entity] !== this.hass.states[entity.entity]
             ) {
