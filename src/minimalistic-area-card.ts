@@ -12,7 +12,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from "lit/directives/if-defined.js";
 import { actionHandler } from './action-handler-directive';
 import { findEntities } from './find-entities';
-import { cardType, EntityRegistryDisplayEntry, HomeAssistantArea, HomeAssistantExt, MinimalisticAreaCardConfig, STATES_OFF, UNAVAILABLE } from './types';
+import { Alignment, cardType, EntityRegistryDisplayEntry, HomeAssistantArea, HomeAssistantExt, MinimalisticAreaCardConfig, STATES_OFF, UNAVAILABLE } from './types';
 
 import { HassEntity } from 'home-assistant-js-websocket/dist';
 import { version as pkgVersion } from "../package.json";
@@ -220,6 +220,11 @@ class MinimalisticAreaCard extends LitElement {
 
         this.config = {
             hold_action: { action: "more-info" },
+            align: {
+                title: Alignment.left,
+                sensors: Alignment.left,
+                buttons: Alignment.right,
+            },
             ...config,
         };
         this.configChanged = true;
@@ -267,11 +272,11 @@ class MinimalisticAreaCard extends LitElement {
             </div>` : null}
 
             <div class="box">
-                <div class="card-header">${this.renderAreaIcon(this.config)}${this.config.title}</div>
-                <div class="sensors">
+                <div class="card-header align-${this.config.align?.title}">${this.renderAreaIcon(this.config)}${this.config.title}</div>
+                <div class="sensors align-${this.config.align?.sensors}">
                     ${this._entitiesSensor.map((entityConf) => this.renderEntity(entityConf, true))}
                 </div>
-                <div class="buttons">
+                <div class="buttons align-${this.config.align?.buttons}">
                     ${this._entitiesButtons.map((entityConf) => this.renderEntity(entityConf, false))}
                 </div>
             </div>
@@ -725,6 +730,7 @@ class MinimalisticAreaCard extends LitElement {
           margin-bottom: -8px;
           min-height: var(--minimalistic-area-card-sensors-min-height, 10px);
           margin-left: 5px;
+          margin-right: 5px;
           font-size: 0.9em;
           line-height: 13px;
       }
@@ -733,13 +739,23 @@ class MinimalisticAreaCard extends LitElement {
           display: block;
           background-color: var( --ha-picture-card-background-color, rgba(0, 0, 0, 0.1) );
           background-color: transparent;
-          text-align: right;
           padding-top: 10px;
           padding-bottom: 10px;
           min-height: 10px;
           width: 100%;
 
           margin-top:auto;
+      }
+      .align-left {
+        text-align: left;
+      }
+
+      .align-right {
+        text-align: right;
+      }
+
+      .align-center {
+        text-align: center;
       }
 
       .box .buttons ha-icon-button {

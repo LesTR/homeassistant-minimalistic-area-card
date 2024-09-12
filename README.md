@@ -30,6 +30,10 @@ For `tap_action` options, see https://www.home-assistant.io/dashboards/actions/.
   shadow: true # Draws a drop shadow on icons (optional)
   hide_unavailable: false # Hide unavailable entities (optional)
   state_color: true # enable or disable HA colors for all entities
+  align:
+    title: left # text align, values: left, right, center (optional)
+    sensors: left # text align, values: left, right, center (optional)
+    buttons: right # text align, values: left, right, center (optional)
   tap_action:
     action: navigate
     navigation_path: /lovelace/living-room

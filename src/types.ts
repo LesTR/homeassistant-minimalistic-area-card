@@ -6,6 +6,17 @@ declare global {
     'hui-error-card': LovelaceCard;
   }
 }
+export enum Alignment {
+    left = "left",
+    right = "right",
+    center = "center",
+}
+
+type AlignmentConfig = {
+    title?: Alignment;
+    sensors?: Alignment;
+    buttons?: Alignment;
+}
 
 export interface MinimalisticAreaCardConfig extends LovelaceCardConfig {
   type: string;
@@ -25,6 +36,7 @@ export interface MinimalisticAreaCardConfig extends LovelaceCardConfig {
   shadow?: boolean;
   state_color?: boolean;
   darken_image?: boolean;
+  align?: AlignmentConfig;
 }
 
 export interface HomeAssistantArea {
