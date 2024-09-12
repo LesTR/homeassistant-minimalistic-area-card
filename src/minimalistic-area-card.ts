@@ -31,6 +31,12 @@ const SENSORS = [
     "binary_sensor"
 ];
 
+enum EntitySection {
+    auto = "auto",
+    sensors = "sensors",
+    buttons = "buttons",
+}
+
 const DOMAINS_TOGGLE = [
     "fan",
     "input_boolean",
@@ -49,6 +55,7 @@ type ExtendedEntityConfig = EntitiesCardEntityConfig & {
     attribute?: string;
     color?: string;
     state?: EntityStateConfig[];
+    section?: EntitySection;
 };
 
 type EntityStateConfig = {
@@ -136,9 +143,16 @@ class MinimalisticAreaCard extends LitElement {
 
             const entity = this.parseEntity(item);
             if (entity != null && entity.entity != null) {
+                const sectionParsed = this._getOrDefault(entity.entity, entity.section, EntitySection.auto);
+                let section = sectionParsed in EntitySection ? sectionParsed : EntitySection.auto;
+
                 // eslint-disable-next-line  @typescript-eslint/no-unused-vars
                 const [domain, _] = entity.entity.split('.');
-                if (SENSORS.indexOf(domain) !== -1 || entity.attribute) {
+
+                if (section == EntitySection.auto) {
+                    section = (SENSORS.indexOf(domain) !== -1 || entity.attribute) ? EntitySection.sensors : EntitySection.buttons;
+                }
+                if (section == EntitySection.sensors) {
                     this._entitiesSensor.push(entity);
                 }
                 else if (
