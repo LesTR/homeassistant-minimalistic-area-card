@@ -36,6 +36,13 @@ body:
       required: true
 
   - type: textarea
+    id: card-config
+    attributes:
+      label: Relevant card config
+      description: Please copy and paste card configuration. Remember to *redact any sensitive information*.
+      render: yaml
+
+  - type: textarea
     id: logs
     attributes:
       label: Relevant log output
