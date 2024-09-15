@@ -6,7 +6,7 @@ import {
     NumberFormat,
     numberFormatToLocale,
     round
-} from 'custom-card-helpers/dist'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
+} from '@dermotduffy/custom-card-helpers/dist'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
 import { css, html, LitElement } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from "lit/directives/if-defined.js";

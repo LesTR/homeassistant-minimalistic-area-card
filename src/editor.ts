@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { fireEvent, HomeAssistant, LovelaceCardEditor } from 'custom-card-helpers';
+import { fireEvent, HomeAssistant, LovelaceCardEditor } from '@dermotduffy/custom-card-helpers';
 import { css, CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 
 import { customElement, property, state } from 'lit/decorators.js';
