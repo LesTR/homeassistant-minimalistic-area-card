@@ -12,10 +12,17 @@ export enum Alignment {
     center = "center",
 }
 
+export enum EntityType {
+  auto = "auto",
+  sensor = "sensor",
+  button = "button",
+}
+
 type AlignmentConfig = {
-    title?: Alignment;
-    sensors?: Alignment;
-    buttons?: Alignment;
+  title?: Alignment;
+  sensors?: Alignment;
+  buttons?: Alignment;
+  titleEntities?: Alignment;
 }
 
 export interface MinimalisticAreaCardConfig extends LovelaceCardConfig {

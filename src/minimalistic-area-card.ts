@@ -12,7 +12,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from "lit/directives/if-defined.js";
 import { actionHandler } from './action-handler-directive';
 import { findEntities } from './find-entities';
-import { Alignment, cardType, EntityRegistryDisplayEntry, HomeAssistantArea, HomeAssistantExt, MinimalisticAreaCardConfig, STATES_OFF, UNAVAILABLE } from './types';
+import { Alignment, cardType, EntityRegistryDisplayEntry, EntityType, HomeAssistantArea, HomeAssistantExt, MinimalisticAreaCardConfig, STATES_OFF, UNAVAILABLE } from './types';
 
 import { HassEntity } from 'home-assistant-js-websocket/dist';
 import { version as pkgVersion } from "../package.json";
@@ -35,6 +35,7 @@ enum EntitySection {
     auto = "auto",
     sensors = "sensors",
     buttons = "buttons",
+    title = "title",
 }
 
 const DOMAINS_TOGGLE = [
@@ -57,6 +58,7 @@ type ExtendedEntityConfig = EntitiesCardEntityConfig & {
     color?: string;
     state?: EntityStateConfig[];
     section?: EntitySection;
+    entity_type? : EntityType;
 };
 
 type EntityStateConfig = {
@@ -125,6 +127,7 @@ class MinimalisticAreaCard extends LitElement {
 
     _entitiesSensor: Array<ExtendedEntityConfig> = [];
     _entitiesButtons: Array<EntitiesCardEntityConfig> = [];
+    _entitiesTitle: Array<EntitiesCardEntityConfig> = [];
     _entitiesTemplated: Array<ExtendedEntityConfig> = [];
 
     setEntities() {
@@ -134,6 +137,7 @@ class MinimalisticAreaCard extends LitElement {
         }
         this._entitiesSensor = [];
         this._entitiesButtons = [];
+        this._entitiesTitle = [];
         this._entitiesTemplated = [];
 
         const entities = this.config?.entities || this.areaEntities || [];
@@ -151,10 +155,16 @@ class MinimalisticAreaCard extends LitElement {
                 if (section == EntitySection.auto) {
                     section = (SENSORS.indexOf(domain) !== -1 || entity.attribute) ? EntitySection.sensors : EntitySection.buttons;
                 }
-                if (section == EntitySection.sensors) {
-                    this._entitiesSensor.push(entity);
-                } else {
-                    this._entitiesButtons.push(entity);
+                switch (section) {
+                    case EntitySection.sensors:
+                        this._entitiesSensor.push(entity);
+                        break;
+                    case EntitySection.title:
+                        this._entitiesTitle.push(entity);
+                        break;
+                    default:
+                        this._entitiesButtons.push(entity);
+                        break;
                 }
             }
         });
@@ -164,12 +174,17 @@ class MinimalisticAreaCard extends LitElement {
     }
 
     parseEntity(item: ExtendedEntityConfig | string) {
-        if (typeof item === "string")
+        if (typeof item === "string") {
             return {
-                entity: item
+                entity: item,
+                entity_type: EntityType.auto,
             } as ExtendedEntityConfig;
-        else
-            return item;
+        } else {
+            return {
+                entity_type: this._getOrDefault(item.entity, item.entity_type, EntityType.auto),
+                ...item
+            };
+        }
     }
 
     _handleEntityAction(ev: ActionHandlerEvent) {
@@ -224,6 +239,7 @@ class MinimalisticAreaCard extends LitElement {
                 title: Alignment.left,
                 sensors: Alignment.left,
                 buttons: Alignment.right,
+                titleEntities: Alignment.right,
             },
             ...config,
         };
@@ -272,16 +288,31 @@ class MinimalisticAreaCard extends LitElement {
             </div>` : null}
 
             <div class="box">
-                <div class="card-header align-${this.config.align?.title}">${this.renderAreaIcon(this.config)}${this.config.title}</div>
+                ${this.renderTitle()}
                 <div class="sensors align-${this.config.align?.sensors}">
-                    ${this._entitiesSensor.map((entityConf) => this.renderEntity(entityConf, true))}
+                    ${this._entitiesSensor.map((entityConf) => this.renderEntity(entityConf))}
                 </div>
                 <div class="buttons align-${this.config.align?.buttons}">
-                    ${this._entitiesButtons.map((entityConf) => this.renderEntity(entityConf, false))}
+                    ${this._entitiesButtons.map((entityConf) => this.renderEntity(entityConf))}
                 </div>
             </div>
         </ha-card>
     `;
+    }
+
+    renderTitle() {
+        const entitites = html`
+            <div class="title-entities title-entities-${this.config.align?.titleEntities?.toLocaleLowerCase()}">
+                ${this._entitiesTitle.map((conf) => this.renderEntity(conf))}
+            </div>
+        `
+        return html`
+        <div class="card-header align-${this.config.align?.title?.toLocaleLowerCase()}">
+            ${this.config.align?.titleEntities == Alignment.left ? entitites : ''}
+            ${this.renderAreaIcon(this.config)}${this.config.title}
+            ${this.config.align?.titleEntities == Alignment.right ? entitites : ''}
+        </div>
+        `;
     }
 
     renderAreaIcon(areaConfig: MinimalisticAreaCardConfig) {
@@ -294,8 +325,7 @@ class MinimalisticAreaCard extends LitElement {
     }
 
     renderEntity(
-        entityConf: ExtendedEntityConfig,
-        isSensor: boolean
+        entityConf: ExtendedEntityConfig
     ) {
         const stateObj = this.hass.states[entityConf.entity];
         if (stateObj == undefined) {
@@ -344,6 +374,8 @@ class MinimalisticAreaCard extends LitElement {
 
         const active = stateObj && stateObj.state && STATES_OFF.indexOf(stateObj.state.toString().toLowerCase()) === -1;
         const title = `${stateObj.attributes?.friendly_name || stateObj.entity_id}: ${computeStateDisplay(this.hass?.localize, stateObj, this.hass?.locale)}`;
+
+        const isSensor = entityConf.entity_type == EntityType.sensor || SENSORS.indexOf(domain) !== -1;
 
         let icon = entityConf.icon
         let color = entityConf.color
@@ -532,7 +564,7 @@ class MinimalisticAreaCard extends LitElement {
         ) {
             return true;
         }
-        for (const entity of [...this._entitiesButtons, ...this._entitiesSensor, ...this._entitiesTemplated]) {
+        for (const entity of [...this._entitiesButtons, ...this._entitiesSensor, ...this._entitiesTemplated, ...this._entitiesTitle]) {
             if (
                 oldHass.states[entity.entity] !== this.hass.states[entity.entity]
             ) {
@@ -735,6 +767,13 @@ class MinimalisticAreaCard extends LitElement {
           line-height: 13px;
       }
 
+      .box .card-header .title-entities  {
+          min-height: var(--minimalistic-area-card-sensors-min-height, 10px);
+          margin-top: -10px;
+          font-size: 0.9em;
+          line-height: 13px;
+      }
+
       .box .buttons {
           display: block;
           background-color: var( --ha-picture-card-background-color, rgba(0, 0, 0, 0.1) );
@@ -746,6 +785,15 @@ class MinimalisticAreaCard extends LitElement {
 
           margin-top:auto;
       }
+
+      .title-entities-left {
+        float: left;
+      }
+
+      .title-entities-right {
+        float: right
+      }
+
       .align-left {
         text-align: left;
       }

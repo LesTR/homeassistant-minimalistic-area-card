@@ -30,6 +30,7 @@ For `tap_action` options, see https://www.home-assistant.io/dashboards/actions/.
   shadow: true # Draws a drop shadow on icons (optional)
   hide_unavailable: false # Hide unavailable entities (optional)
   state_color: true # enable or disable HA colors for all entities
+  entity_type: auto # auto, sensor, button (optional)
   align:
     title: left # text align, values: left, right, center (optional)
     sensors: left # text align, values: left, right, center (optional)
@@ -44,7 +45,7 @@ For `tap_action` options, see https://www.home-assistant.io/dashboards/actions/.
       hide: false # show/hide entity (optional), default false
       force_dialog: false # force dialog for buttons instead of calling toogle
       darken_image: true # reduce brightness of the background image to constrast with entities
-      section: auto # define the section where to show given entity (optional), default 'auto', possible values: auto, sensors, buttons. Sensors means the first line, buttons the second one.
+      section: auto # define the section where to show given entity (optional), default 'auto', possible values: auto, sensors, buttons, title. Sensors means the first line, buttons the second one, title op.
     - entity: switch.fireplace_on_off
     - entity: cover.window_covering
       tap_action:
