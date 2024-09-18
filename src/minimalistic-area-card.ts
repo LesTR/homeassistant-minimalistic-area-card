@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-    ActionHandlerEvent, computeStateDisplay, EntitiesCardEntityConfig,
+    ActionHandlerEvent, computeStateDisplay, computeDomain, EntitiesCardEntityConfig,
     FrontendLocaleData,
-    handleAction, hasAction, hasConfigOrEntityChanged, NavigateActionConfig,
+    handleAction, hasAction, hasConfigOrEntityChanged, LovelaceCard, NavigateActionConfig,
     NumberFormat,
     numberFormatToLocale,
     round
 } from '@dermotduffy/custom-card-helpers/dist'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
-import { css, html, LitElement } from 'lit';
+import { css, CSSResultGroup, html, LitElement, nothing, PropertyValues } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from "lit/directives/if-defined.js";
 import { actionHandler } from './action-handler-directive';
@@ -16,6 +16,7 @@ import { Alignment, cardType, EntityRegistryDisplayEntry, EntityType, HomeAssist
 
 import { HassEntity } from 'home-assistant-js-websocket/dist';
 import { version as pkgVersion } from "../package.json";
+import { customElement } from 'lit/decorators.js';
 
 
 /* eslint no-console: 0 */
@@ -81,28 +82,35 @@ const createEntityNotFoundWarning = (
         : hass.localize("ui.panel.lovelace.warning.starting");
 
 
-class MinimalisticAreaCard extends LitElement {
+@customElement(cardType)
+class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     static properties = {
         hass: { attribute: false },
         config: { state: true }
     };
 
-    private hass!: HomeAssistantExt;
+    hass!: HomeAssistantExt;
     private config!: MinimalisticAreaCardConfig;
     private area?: HomeAssistantArea;
     private areaEntities?: string[];
     private _templatedEntityNameRegexp = RegExp(/["']((input_([^.]+)|(binary_)?sensor|number|switch|fan|light|climate)\.[a-z_]+)["']/, "gmsid")
     private configChanged = true
-    private previowsAreaEntitiesCount = 0;
 
-    override async performUpdate() {
+    private _entitiesSensor: Array<ExtendedEntityConfig> = [];
+    private _entitiesButtons: Array<EntitiesCardEntityConfig> = [];
+    private _entitiesTitle: Array<EntitiesCardEntityConfig> = [];
+    private _entitiesTemplated: Array<ExtendedEntityConfig> = [];
+
+   private previowsAreaEntitiesCount = 0;
+
+    protected override performUpdate() : void {
         this.setArea();
         this.setEntities();
-        await super.performUpdate();
+        super.performUpdate();
         this.configChanged = false;
     }
 
-    setArea() {
+    private setArea() : void {
         if (this.hass?.connected) {
             if (this.config && this.config.area) {
                 const area = this.hass.areas[this.config.area];
@@ -125,12 +133,7 @@ class MinimalisticAreaCard extends LitElement {
         }
     }
 
-    _entitiesSensor: Array<ExtendedEntityConfig> = [];
-    _entitiesButtons: Array<EntitiesCardEntityConfig> = [];
-    _entitiesTitle: Array<EntitiesCardEntityConfig> = [];
-    _entitiesTemplated: Array<ExtendedEntityConfig> = [];
-
-    setEntities() {
+    private setEntities() : void {
         if (!this.configChanged && this.areaEntities?.length == this.previowsAreaEntitiesCount) {
             // Don't refresh entities unless config changed or a new entity was added into area
             return;
@@ -142,15 +145,14 @@ class MinimalisticAreaCard extends LitElement {
 
         const entities = this.config?.entities || this.areaEntities || [];
 
-        entities.forEach((item) => {
+        entities.forEach(item => {
 
             const entity = this.parseEntity(item);
             if (entity != null && entity.entity != null) {
                 const sectionParsed = this._getOrDefault(entity.entity, entity.section, EntitySection.auto);
                 let section = sectionParsed in EntitySection ? sectionParsed : EntitySection.auto;
 
-                // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-                const [domain, _] = entity.entity.split('.');
+                const domain = computeDomain(entity.entity)
 
                 if (section == EntitySection.auto) {
                     section = (SENSORS.indexOf(domain) !== -1 || entity.attribute) ? EntitySection.sensors : EntitySection.buttons;
@@ -173,7 +175,7 @@ class MinimalisticAreaCard extends LitElement {
         }
     }
 
-    parseEntity(item: ExtendedEntityConfig | string) {
+    private parseEntity(item: ExtendedEntityConfig | string) : ExtendedEntityConfig {
         if (typeof item === "string") {
             return {
                 entity: item,
@@ -187,19 +189,19 @@ class MinimalisticAreaCard extends LitElement {
         }
     }
 
-    _handleEntityAction(ev: ActionHandlerEvent) {
+    private _handleEntityAction(ev: ActionHandlerEvent) : void{
         const config = (ev.currentTarget as any).config;
         handleAction(this, this.hass, config, ev.detail.action);
     }
 
-    _handleThisAction(ev: ActionHandlerEvent) {
+    private _handleThisAction(ev: ActionHandlerEvent) : void {
         const parent = ((ev.currentTarget as HTMLElement).getRootNode() as any)?.host?.parentElement as HTMLElement;
         if (this.hass && this.config && ev.detail.action && (!parent || parent.tagName !== "HUI-CARD-PREVIEW")) {
             handleAction(this, this.hass, this.config, ev.detail.action);
         }
     }
 
-    _parseTemplatedEntities(obj: any) {
+    private _parseTemplatedEntities(obj: any) : void {
         if (obj == null || obj == undefined) {
             return;
         }
@@ -223,7 +225,7 @@ class MinimalisticAreaCard extends LitElement {
     }
     // The user supplied configuration. Throw an exception and Home Assistant
     // will render an error card.
-    setConfig(config: MinimalisticAreaCardConfig) {
+    public setConfig(config: MinimalisticAreaCardConfig) : void {
 
         if (
             !config ||
@@ -248,13 +250,20 @@ class MinimalisticAreaCard extends LitElement {
 
     // The height of your card. Home Assistant uses this to automatically
     // distribute all cards over the available columns.
-    getCardSize() {
+    public getCardSize(): number {
         return 3;
     }
 
-    render() {
+    public getLayoutOptions() {
+        return {
+            grid_rows: 1,
+            grid_columns: 1,
+        };
+    }
+
+    protected render() {
         if (!this.config || !this.hass) {
-            return html``;
+            return nothing;
         }
 
         const background_color = this.config.background_color ? `background-color: ${this.config.background_color}` : "";
@@ -300,7 +309,7 @@ class MinimalisticAreaCard extends LitElement {
     `;
     }
 
-    renderTitle() {
+    private renderTitle() {
         const entitites = html`
             <div class="title-entities title-entities-${this.config.align?.titleEntities?.toLocaleLowerCase()}">
                 ${this._entitiesTitle.map((conf) => this.renderEntity(conf))}
@@ -315,7 +324,7 @@ class MinimalisticAreaCard extends LitElement {
         `;
     }
 
-    renderAreaIcon(areaConfig: MinimalisticAreaCardConfig) {
+    private renderAreaIcon(areaConfig: MinimalisticAreaCardConfig) {
         if (this._getOrDefault(null, areaConfig.icon, "").trim().length == 0 || !this._getOrDefault(null, areaConfig.show_area_icon, true)) {
             return html``;
         }
@@ -324,18 +333,17 @@ class MinimalisticAreaCard extends LitElement {
         `;
     }
 
-    renderEntity(
+    private renderEntity(
         entityConf: ExtendedEntityConfig
     ) {
         const stateObj = this.hass.states[entityConf.entity];
         if (stateObj == undefined) {
-            return html``;
+            return nothing;
         }
         const entity = this.hass.entities[entityConf.entity] as EntityRegistryDisplayEntry;
         const entityId = entity.entity_id
 
-        // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-        const [domain, _] = stateObj.entity_id.split(".");
+        const domain = computeDomain(stateObj.entity_id);
 
         const dialog = this._getOrDefault(entityId, entityConf.force_dialog, false) || DOMAINS_TOGGLE.indexOf(domain) === -1
 
@@ -354,10 +362,6 @@ class MinimalisticAreaCard extends LitElement {
             ...entityConf,
         };
 
-        if (this._getOrDefault(entityId, entityConf.hide, false)) {
-            return html``;
-        }
-
         if ((!stateObj || stateObj.state === UNAVAILABLE) && !this.config.hide_unavailable) {
             return html`
             <div class="wrapper">
@@ -369,7 +373,7 @@ class MinimalisticAreaCard extends LitElement {
       `;
         }
         else if ((!stateObj || stateObj.state === UNAVAILABLE) && this.config.hide_unavailable) {
-            return html``;
+            return nothing;
         }
 
         const active = stateObj && stateObj.state && STATES_OFF.indexOf(stateObj.state.toString().toLowerCase()) === -1;
@@ -379,19 +383,19 @@ class MinimalisticAreaCard extends LitElement {
 
         let icon = entityConf.icon
         let color = entityConf.color
-        let hide = false
+        let hide = this._getOrDefault(entityId, entityConf.hide, false);
 
         if (entityConf.state !== undefined && entityConf.state.length > 0) {
             const currentState = this.computeStateValue(stateObj, entity)
             const stateConfig = entityConf.state.filter((i) => i.value == currentState)[0]
             if (stateConfig) {
                 icon = this._getOrDefault(entityId, stateConfig.icon, entityConf.icon)
-                color = this._getOrDefault(entityId,stateConfig.color, entityConf.color)
+                color = this._getOrDefault(entityId, stateConfig.color, entityConf.color)
                 hide = this._getOrDefault(entityId, stateConfig.hide, false)
             }
         }
         if (hide) {
-            return html``;
+            return nothing;
         }
 
         return html`
@@ -423,14 +427,12 @@ class MinimalisticAreaCard extends LitElement {
     `;
     }
 
-    isNumericState(stateObj: HassEntity) {
+    private isNumericState(stateObj: HassEntity) {
         return !!stateObj.attributes.unit_of_measurement ||
             !!stateObj.attributes.state_class;
     }
 
-    computeStateValue(stateObj: HassEntity, entity?: EntityRegistryDisplayEntry) {
-        // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-        const [domain, _] = stateObj.entity_id.split(".");
+    private computeStateValue(stateObj: HassEntity, entity?: EntityRegistryDisplayEntry) {
         if (this.isNumericState(stateObj)) {
             const value = Number(stateObj.state);
             if (isNaN(value))
@@ -452,11 +454,11 @@ class MinimalisticAreaCard extends LitElement {
     }
 
     /**
- * Checks if the current entity state should be formatted as an integer based on the `state` and `step` attribute and returns the appropriate `Intl.NumberFormatOptions` object with `maximumFractionDigits` set
- * @param entityState The state object of the entity
- * @returns An `Intl.NumberFormatOptions` object with `maximumFractionDigits` set to 0, or `undefined`
- */
-    getNumberFormatOptions(
+     * Checks if the current entity state should be formatted as an integer based on the `state` and `step` attribute and returns the appropriate `Intl.NumberFormatOptions` object with `maximumFractionDigits` set
+     * @param entityState The state object of the entity
+     * @returns An `Intl.NumberFormatOptions` object with `maximumFractionDigits` set to 0, or `undefined`
+     */
+    private getNumberFormatOptions(
         entityState: HassEntity,
         entity?: EntityRegistryDisplayEntry
     ): Intl.NumberFormatOptions | undefined {
@@ -484,7 +486,7 @@ class MinimalisticAreaCard extends LitElement {
      * @param localeOptions The user-selected language and formatting, from `hass.locale`
      * @param options Intl.NumberFormatOptions to use
      */
-    formatNumber(
+    private formatNumber(
         num: string | number,
         localeOptions?: FrontendLocaleData,
         options?: Intl.NumberFormatOptions
@@ -520,11 +522,11 @@ class MinimalisticAreaCard extends LitElement {
     }
 
     /**
- * Generates default options for Intl.NumberFormat
- * @param num The number to be formatted
- * @param options The Intl.NumberFormatOptions that should be included in the returned options
- */
-    getDefaultFormatOptions(
+     * Generates default options for Intl.NumberFormat
+     * @param num The number to be formatted
+     * @param options The Intl.NumberFormatOptions that should be included in the returned options
+     */
+    private getDefaultFormatOptions(
         num: string | number,
         options?: Intl.NumberFormatOptions
     ): Intl.NumberFormatOptions {
@@ -550,7 +552,7 @@ class MinimalisticAreaCard extends LitElement {
         return defaultOptions;
     }
 
-    shouldUpdate(changedProps) {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         if (hasConfigOrEntityChanged(this, changedProps, false)) {
             return true;
         }
@@ -575,7 +577,7 @@ class MinimalisticAreaCard extends LitElement {
         return false;
     }
 
-     _evalTemplate(entity: string|null, func: string) {
+    private _evalTemplate(entity: string | null, func: string): any {
         /* eslint no-new-func: 0 */
         try {
             return new Function(
@@ -586,18 +588,18 @@ class MinimalisticAreaCard extends LitElement {
             ).call(
                 this,
                 this.hass,
-                entity != null ? this.hass.states[entity].state: null,
+                entity != null ? this.hass.states[entity].state : null,
                 html,
             );
         } catch (e: any) {
-          const funcTrimmed = func.length <= 100 ? func.trim() : `${func.trim().substring(0, 98)}...`;
-          e.message = `${e.name}: ${e.message} in '${funcTrimmed}'`;
-          e.name = 'MinimalistAreaCardJSTemplateError';
-          throw e;
+            const funcTrimmed = func.length <= 100 ? func.trim() : `${func.trim().substring(0, 98)}...`;
+            e.message = `${e.name}: ${e.message} in '${funcTrimmed}'`;
+            e.name = 'MinimalistAreaCardJSTemplateError';
+            throw e;
         }
     }
 
-    _getOrDefault(entity: string|null, value: any, defaultValue) : any {
+    private _getOrDefault(entity: string | null, value: any, defaultValue): any {
         if (value == undefined) {
             return defaultValue;
         }
@@ -610,7 +612,7 @@ class MinimalisticAreaCard extends LitElement {
         return value;
     }
 
-    static findAreaEntities(hass: HomeAssistantExt, area_id: string) {
+    public static findAreaEntities(hass: HomeAssistantExt, area_id: string): Array<string> {
         const area = hass.areas && hass.areas[area_id];
         const areaEntities = hass.entities && area &&
             Object.keys(hass.entities)
@@ -627,7 +629,7 @@ class MinimalisticAreaCard extends LitElement {
         return areaEntities;
     }
 
-    static getStubConfig(hass: HomeAssistantExt,
+    public static getStubConfig(hass: HomeAssistantExt,
         entities: string[],
         entitiesFallback: string[]) {
 
@@ -687,7 +689,7 @@ class MinimalisticAreaCard extends LitElement {
         return obj;
     }
 
-    static get styles() {
+    public static get styles(): CSSResultGroup {
         return css`
       * {
         box-sizing: border-box;
@@ -849,16 +851,8 @@ class MinimalisticAreaCard extends LitElement {
     `;
     }
 }
-
-
-
-customElements.define(cardType, MinimalisticAreaCard);
-
-const theWindow = window as any;
-theWindow.customCards = theWindow.customCards || [];
-theWindow.customCards.push({
-    type: cardType,
-    name: "Minimalistic Area",
-    preview: true, // Optional - defaults to false
-    description: "Minimalistic Area Card" // Optional
-});
+declare global {
+    interface HTMLElementTagNameMap {
+        "minimalistic-area-card": MinimalisticAreaCard;
+    }
+}
