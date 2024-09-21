@@ -19,7 +19,7 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile
 
-      - name: Build
+      - name: Build and test
         run: yarn build
 
       # Upload build file to the release as an asset.
