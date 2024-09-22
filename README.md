@@ -35,6 +35,7 @@ For `tap_action` options, see https://www.home-assistant.io/dashboards/actions/.
     title: left # text align, values: left, right, center (optional)
     sensors: left # text align, values: left, right, center (optional)
     buttons: right # text align, values: left, right, center (optional)
+    title_entities: right # text align, values: left, right (optional)
   tap_action:
     action: navigate
     navigation_path: /lovelace/living-room

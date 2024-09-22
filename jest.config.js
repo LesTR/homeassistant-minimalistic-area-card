@@ -1,7 +1,16 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
 module.exports = {
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   transform: {
-    "^.+.tsx?$": ["ts-jest",{}],
+    "^.+.tsssx?$": ["ts-jest", {}],
+    '^.+\\.ts?$': ['ts-jest', { "compiler": "ttsc" }],
+    '^.+\\.(js|jsx)$': [
+      'babel-jest', {
+          'presets': ['@babel/preset-env'],
+          "plugins": [
+              ["@babel/plugin-transform-runtime"]
+          ]
+      }]
   },
+  transformIgnorePatterns: ["node_modules\/(?!(lit|lit-element|lit-html|@lit-labs|@lit)\/)"],
 };

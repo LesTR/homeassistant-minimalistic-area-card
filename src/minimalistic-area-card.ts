@@ -12,7 +12,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from "lit/directives/if-defined.js";
 import { actionHandler } from './action-handler-directive';
 import { findEntities } from './find-entities';
-import { Alignment, cardType, EntityRegistryDisplayEntry, EntityType, HomeAssistantArea, HomeAssistantExt, MinimalisticAreaCardConfig, STATES_OFF, UNAVAILABLE } from './types';
+import { Alignment, AlignmentConfig, cardType, EntityRegistryDisplayEntry, EntityType, HomeAssistantArea, HomeAssistantExt, MinimalisticAreaCardConfig, STATES_OFF, UNAVAILABLE } from './types';
 
 import { HassEntity } from 'home-assistant-js-websocket/dist';
 import { version as pkgVersion } from "../package.json";
@@ -83,14 +83,14 @@ const createEntityNotFoundWarning = (
 
 
 @customElement(cardType)
-class MinimalisticAreaCard extends LitElement implements LovelaceCard {
+export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     static properties = {
         hass: { attribute: false },
         config: { state: true }
     };
 
     hass!: HomeAssistantExt;
-    private config!: MinimalisticAreaCardConfig;
+    config!: MinimalisticAreaCardConfig;
     private area?: HomeAssistantArea;
     private areaEntities?: string[];
     private _templatedEntityNameRegexp = RegExp(/["']((input_([^.]+)|(binary_)?sensor|number|switch|fan|light|climate)\.[a-z_]+)["']/, "gmsid")
@@ -237,27 +237,36 @@ class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
         this.config = {
             hold_action: { action: "more-info" },
-            align: {
-                title: Alignment.left,
-                sensors: Alignment.left,
-                buttons: Alignment.right,
-                titleEntities: Alignment.right,
-            },
             ...config,
         };
+        this.config.align = {
+            title: this._getOrDefault(null, config.align?.title, Alignment.left),
+            sensors: this._getOrDefault(null, config.align?.sensors, Alignment.left),
+            buttons: this._getOrDefault(null, config.align?.buttons, Alignment.right),
+            title_entities: this._getOrDefault(null, config.align?.title_entities, Alignment.right),
+            ...config.align
+        } as AlignmentConfig;
         this.configChanged = true;
     }
 
-    // The height of your card. Home Assistant uses this to automatically
-    // distribute all cards over the available columns.
     public getCardSize(): number {
-        return 3;
+        let size = 1;
+        if (this._entitiesSensor.length > 0) {
+            size++;
+        }
+        if (this._entitiesButtons.length > 0) {
+            size++;
+        }
+        return size;
     }
 
     public getLayoutOptions() {
+        const size = this.getCardSize()
         return {
-            grid_rows: 1,
+            grid_rows: size,
             grid_columns: 1,
+            grid_min_rows: 1,
+            grig_min_columns: 1,
         };
     }
 
@@ -271,7 +280,6 @@ class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         if (!this.config.camera_image && (this.config.image || this.area?.picture)) {
             imageUrl = (new URL(this.config.image || this.area?.picture || "", this.hass.auth.data.hassUrl)).toString();
         }
-
 
         return html`
         <ha-card @action=${this._handleThisAction} style=${background_color} .actionHandler=${actionHandler({
@@ -298,10 +306,10 @@ class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
             <div class="box">
                 ${this.renderTitle()}
-                <div class="sensors align-${this.config.align?.sensors}">
+                <div class="sensors align-${this.config.align?.sensors?.toLocaleLowerCase()}">
                     ${this._entitiesSensor.map((entityConf) => this.renderEntity(entityConf))}
                 </div>
-                <div class="buttons align-${this.config.align?.buttons}">
+                <div class="buttons align-${this.config.align?.buttons?.toLocaleLowerCase()}">
                     ${this._entitiesButtons.map((entityConf) => this.renderEntity(entityConf))}
                 </div>
             </div>
@@ -311,15 +319,15 @@ class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
     private renderTitle() {
         const entitites = html`
-            <div class="title-entities title-entities-${this.config.align?.titleEntities?.toLocaleLowerCase()}">
+            <div class="title-entities title-entities-${this.config.align?.title_entities?.toLocaleLowerCase()}">
                 ${this._entitiesTitle.map((conf) => this.renderEntity(conf))}
             </div>
         `
         return html`
         <div class="card-header align-${this.config.align?.title?.toLocaleLowerCase()}">
-            ${this.config.align?.titleEntities == Alignment.left ? entitites : ''}
+            ${this.config.align?.title_entities == Alignment.left ? entitites : ''}
             ${this.renderAreaIcon(this.config)}${this.config.title}
-            ${this.config.align?.titleEntities == Alignment.right ? entitites : ''}
+            ${this.config.align?.title_entities != Alignment.left ? entitites : ''}
         </div>
         `;
     }
@@ -771,7 +779,9 @@ class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
       .box .card-header .title-entities  {
           min-height: var(--minimalistic-area-card-sensors-min-height, 10px);
+          padding: 0px;
           margin-top: -10px;
+          margin-right: -20px;
           font-size: 0.9em;
           line-height: 13px;
       }
@@ -784,7 +794,6 @@ class MinimalisticAreaCard extends LitElement implements LovelaceCard {
           padding-bottom: 10px;
           min-height: 10px;
           width: 100%;
-
           margin-top:auto;
       }
 
