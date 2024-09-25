@@ -1,90 +1,84 @@
-import { computeDomain, HomeAssistant } from "@dermotduffy/custom-card-helpers";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistantArea } from "./types";
+import { computeDomain, HomeAssistant } from '@dermotduffy/custom-card-helpers';
+import { HassEntity } from 'home-assistant-js-websocket';
+import { HomeAssistantArea } from './types';
 
 const arrayFilter = (
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    array: any[],
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    conditions: Array<(value: any) => boolean>,
-    maxSize: number
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  array: any[],
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  conditions: Array<(value: any) => boolean>,
+  maxSize: number,
 ) => {
-    if (!maxSize || maxSize > array.length) {
-        maxSize = array.length;
+  if (!maxSize || maxSize > array.length) {
+    maxSize = array.length;
+  }
+
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  const filteredArray: any[] = [];
+
+  for (let i = 0; i < array.length && filteredArray.length < maxSize; i++) {
+    let meetsConditions = true;
+
+    for (const condition of conditions) {
+      if (!condition(array[i])) {
+        meetsConditions = false;
+        break;
+      }
     }
 
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    const filteredArray: any[] = [];
-
-    for (let i = 0; i < array.length && filteredArray.length < maxSize; i++) {
-        let meetsConditions = true;
-
-        for (const condition of conditions) {
-            if (!condition(array[i])) {
-                meetsConditions = false;
-                break;
-            }
-        }
-
-        if (meetsConditions) {
-            filteredArray.push(array[i]);
-        }
+    if (meetsConditions) {
+      filteredArray.push(array[i]);
     }
+  }
 
-    return filteredArray;
+  return filteredArray;
 };
 
 export const findEntities = (
-    hass: HomeAssistant,
-    maxEntities: number,
-    entities: string[],
-    entitiesFallback: string[],
-    includeDomains?: string[],
-    entityFilter?: (stateObj: HassEntity) => boolean
+  hass: HomeAssistant,
+  maxEntities: number,
+  entities: string[],
+  entitiesFallback: string[],
+  includeDomains?: string[],
+  entityFilter?: (stateObj: HassEntity) => boolean,
 ): string[] => {
-    const conditions: Array<(value: string) => boolean> = [];
+  const conditions: Array<(value: string) => boolean> = [];
 
-    if (includeDomains?.length) {
-        conditions.push((eid) => includeDomains.includes(computeDomain(eid)));
-    }
+  if (includeDomains?.length) {
+    conditions.push((eid) => includeDomains.includes(computeDomain(eid)));
+  }
 
-    if (entityFilter) {
-        conditions.push(
-            (eid) => hass.states[eid] && entityFilter(hass.states[eid])
-        );
-    }
+  if (entityFilter) {
+    conditions.push((eid) => hass.states[eid] && entityFilter(hass.states[eid]));
+  }
 
-    const entityIds = arrayFilter(entities, conditions, maxEntities);
+  const entityIds = arrayFilter(entities, conditions, maxEntities);
 
-    if (entityIds.length < maxEntities && entitiesFallback.length) {
-        const fallbackEntityIds = findEntities(
-            hass,
-            maxEntities - entityIds.length,
-            entitiesFallback,
-            [],
-            includeDomains,
-            entityFilter
-        );
+  if (entityIds.length < maxEntities && entitiesFallback.length) {
+    const fallbackEntityIds = findEntities(
+      hass,
+      maxEntities - entityIds.length,
+      entitiesFallback,
+      [],
+      includeDomains,
+      entityFilter,
+    );
 
-        entityIds.push(...fallbackEntityIds);
-    }
+    entityIds.push(...fallbackEntityIds);
+  }
 
-    return entityIds;
+  return entityIds;
 };
 
 export async function subscribeAreas(hass: HomeAssistant): Promise<HomeAssistantArea[] | undefined> {
-    if (!hass || !hass.connection || !hass.connected) {
-        return undefined;
-    }
-    else {
-        const result = (await hass.connection.sendMessagePromise({
-            type: 'config/area_registry/list'
-        })) as HomeAssistantArea[];
+  if (!hass || !hass.connection || !hass.connected) {
+    return undefined;
+  } else {
+    const result = (await hass.connection.sendMessagePromise({
+      type: 'config/area_registry/list',
+    })) as HomeAssistantArea[];
 
-        if (!result)
-            return undefined;
-        else
-            return result;
-
-    }
+    if (!result) return undefined;
+    else return result;
+  }
 }

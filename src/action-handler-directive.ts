@@ -195,6 +195,6 @@ export const actionHandler = directive(
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-    render(_options?: ActionHandlerOptions) { }
+    render(_options?: ActionHandlerOptions) {}
   },
 );

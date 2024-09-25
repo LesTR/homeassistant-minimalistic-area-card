@@ -1,7 +1,7 @@
 name: Question
 description: Ask a question or a feature request
-title: "[Question]: "
-labels: ["question"]
+title: '[Question]: '
+labels: ['question']
 assignees:
   - junalmeida
 body:
@@ -23,7 +23,7 @@ body:
     attributes:
       label: Card Version
       description: What is the card version you are running?
-      placeholder: "x.x.x.x"
+      placeholder: 'x.x.x.x'
     validations:
       required: true
 

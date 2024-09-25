@@ -4,8 +4,8 @@ resources:
 views:
   - cards:
       - type: custom:minimalistic-area-card
-        title: "Kitchen"
-        image: "https://demo.home-assistant.io/stub_config/kitchen.png"
+        title: 'Kitchen'
+        image: 'https://demo.home-assistant.io/stub_config/kitchen.png'
         tap_action:
           action: navigate
           navigation_path: /test

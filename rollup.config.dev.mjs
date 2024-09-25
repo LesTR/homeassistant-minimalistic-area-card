@@ -7,7 +7,6 @@ import serve from 'rollup-plugin-serve';
 import json from '@rollup/plugin-json';
 import ignore from 'rollup-plugin-ignore';
 
-
 export default {
   input: ['src/minimalistic-area-card.ts'],
   strictDeprecations: true,
@@ -35,8 +34,6 @@ export default {
         'Access-Control-Allow-Origin': '*',
       },
     }),
-    ignore([
-      '@material/web',
-    ], { commonjsBugFix: true }),
+    ignore(['@material/web'], { commonjsBugFix: true }),
   ],
 };

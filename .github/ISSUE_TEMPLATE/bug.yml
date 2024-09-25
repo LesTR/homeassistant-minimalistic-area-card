@@ -1,7 +1,7 @@
 name: Bug Report
 description: File a bug report
-title: "[Bug]: "
-labels: ["bug", "triage"]
+title: '[Bug]: '
+labels: ['bug', 'triage']
 assignees:
   - junalmeida
 body:
@@ -23,7 +23,7 @@ body:
     attributes:
       label: Card Version
       description: What is the card version you are running?
-      placeholder: "x.x.x.x"
+      placeholder: 'x.x.x.x'
     validations:
       required: true
 
@@ -39,8 +39,8 @@ body:
     id: browser-version
     attributes:
       label: Browser Version
-      description: "What browser app and version are you running the dashboard? Before filing a bug report, try to clear browser/app cache."
-      placeholder: "Edge vXXX, Home Assistant iOS App vXXX."
+      description: 'What browser app and version are you running the dashboard? Before filing a bug report, try to clear browser/app cache.'
+      placeholder: 'Edge vXXX, Home Assistant iOS App vXXX.'
     validations:
       required: true
   - type: textarea

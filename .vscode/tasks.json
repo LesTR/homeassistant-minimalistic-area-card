@@ -1,22 +1,22 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "npm",
-			"script": "start",
-			"problemMatcher": [
-				{
-					"base": "$tsc-watch",
-					"background": {
-						"activeOnStart": true,
-						"beginsPattern": ".*bundles.*",
-						"endsPattern": ".*created dist in.*"
-					},
-				}
-			],
-			"group": "build",
-			"isBackground": true,
-			"label": "start",
-		}
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": [
+        {
+          "base": "$tsc-watch",
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": ".*bundles.*",
+            "endsPattern": ".*created dist in.*"
+          }
+        }
+      ],
+      "group": "build",
+      "isBackground": true,
+      "label": "start"
+    }
+  ]
 }

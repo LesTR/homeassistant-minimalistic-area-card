@@ -68,8 +68,8 @@ export class BoilerplateCardEditor extends LitElement implements LovelaceCardEdi
         @closed=${(ev) => ev.stopPropagation()}
       >
         ${entities.map((entity) => {
-      return html`<mwc-list-item .value=${entity}>${entity}</mwc-list-item>`;
-    })}
+          return html`<mwc-list-item .value=${entity}>${entity}</mwc-list-item>`;
+        })}
       </mwc-select>
       <mwc-textfield
         label="Name (Optional)"

@@ -30,9 +30,7 @@ const plugins = [
   }),
   dev && serve(serveopts),
   !dev && terser(),
-  ignore([
-    '@material/web',
-  ], { commonjsBugFix: true }),
+  ignore(['@material/web'], { commonjsBugFix: true }),
 ];
 
 export default [
