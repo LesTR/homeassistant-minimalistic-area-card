@@ -5,6 +5,7 @@ import {
   LovelaceCard,
   LovelaceCardConfig,
   LovelaceCardEditor,
+  EntitiesCardEntityConfig,
   STATES_OFF as STATES_OFF_HELPER,
 } from '@dermotduffy/custom-card-helpers/dist';
 import { name } from '../package.json';
@@ -59,6 +60,33 @@ export interface HomeAssistantArea {
   picture: string;
   name: string;
 }
+
+export enum EntitySection {
+  auto = 'auto',
+  sensors = 'sensors',
+  buttons = 'buttons',
+  title = 'title',
+}
+
+export type ExtendedEntityConfig = EntitiesCardEntityConfig & {
+  prefix?: string;
+  suffix?: string;
+  show_state?: boolean;
+  force_dialog?: boolean;
+  hide?: boolean;
+  attribute?: string;
+  color?: string;
+  state?: EntityStateConfig[];
+  section?: EntitySection;
+  entity_type?: EntityType;
+};
+
+export type EntityStateConfig = {
+  value: string;
+  icon?: string;
+  color?: string;
+  hide?: boolean;
+};
 
 export interface EntityRegistryDisplayEntry {
   entity_id: string;

@@ -24,7 +24,9 @@ import {
   AlignmentConfig,
   cardType,
   EntityRegistryDisplayEntry,
+  EntitySection,
   EntityType,
+  ExtendedEntityConfig,
   HomeAssistantArea,
   HomeAssistantExt,
   MinimalisticAreaCardConfig,
@@ -35,6 +37,7 @@ import {
 import { HassEntity } from 'home-assistant-js-websocket/dist';
 import { version as pkgVersion } from '../package.json';
 import { customElement } from 'lit/decorators.js';
+import { evalTemplate } from './utils';
 
 /* eslint no-console: 0 */
 console.info(
@@ -45,35 +48,7 @@ console.info(
 
 const STATE_NOT_RUNNING = 'NOT_RUNNING';
 const SENSORS = ['sensor', 'binary_sensor'];
-
-enum EntitySection {
-  auto = 'auto',
-  sensors = 'sensors',
-  buttons = 'buttons',
-  title = 'title',
-}
-
 const DOMAINS_TOGGLE = ['fan', 'input_boolean', 'light', 'switch', 'group', 'automation', 'humidifier'];
-
-type ExtendedEntityConfig = EntitiesCardEntityConfig & {
-  prefix?: string;
-  suffix?: string;
-  show_state?: boolean;
-  force_dialog?: boolean;
-  hide?: boolean;
-  attribute?: string;
-  color?: string;
-  state?: EntityStateConfig[];
-  section?: EntitySection;
-  entity_type?: EntityType;
-};
-
-type EntityStateConfig = {
-  value: string;
-  icon?: string;
-  color?: string;
-  hide?: boolean;
-};
 
 const createEntityNotFoundWarning = (hass, entityId) =>
   hass.config.state !== STATE_NOT_RUNNING
@@ -581,32 +556,12 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     return false;
   }
 
-  private _evalTemplate(entity: string | null, func: string): any {
-    /* eslint no-new-func: 0 */
-    try {
-      return new Function('hass', 'state', 'html', `'use strict'; ${func}`).call(
-        this,
-        this.hass,
-        entity != null ? this.hass.states[entity].state : null,
-        html,
-      );
-    } catch (e: any) {
-      const funcTrimmed = func.length <= 100 ? func.trim() : `${func.trim().substring(0, 98)}...`;
-      e.message = `${e.name}: ${e.message} in '${funcTrimmed}'`;
-      e.name = 'MinimalistAreaCardJSTemplateError';
-      throw e;
-    }
-  }
-
   private _getOrDefault(entity: string | null, value: any, defaultValue): any {
     if (value == undefined) {
       return defaultValue;
     }
     if (typeof value === 'string') {
-      const trimmed = value.trim();
-      if (trimmed.startsWith('${') && trimmed.endsWith('}')) {
-        return this._evalTemplate(entity, trimmed.slice(2, -1));
-      }
+      return evalTemplate(entity, value, this.hass);
     }
     return value;
   }

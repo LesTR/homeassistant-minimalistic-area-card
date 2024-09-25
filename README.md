@@ -88,13 +88,14 @@ Example:
 ```yaml
 entities:
   - entity: climate.bedroom_thermostat_thermostat
-    hide: ${return hass.states['input_boolean.heating_season'].state === 'off'}
+    hide: ${hass.states['input_boolean.heating_season'].state === 'off'}
+  - entity: binary_sensor.washing_machine_water_leakage_sensor_moisture
+    hide: ${state == "off"}
 ```
 
 ### Variables and types exposes in templates
 
 ```
-this : MinimalisticAreaCard - card object
 hass : HomeAssistant - homeassistant object
 state : any - state value of given entity or null
 ```
