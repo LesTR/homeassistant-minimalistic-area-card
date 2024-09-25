@@ -59,7 +59,8 @@
   "scripts": {
     "start": "rollup -c rollup.config.dev.mjs --watch",
     "build": "yarn run lint && yarn run test && yarn run rollup",
-    "lint": "eslint src/*.ts",
+    "prettier-check": "yarn prettier . --check",
+    "lint": "yarn run prettier-check && eslint src/*.ts",
     "test": "jest",
     "coverage": "jest --coverage",
     "rollup": "rollup -c"
