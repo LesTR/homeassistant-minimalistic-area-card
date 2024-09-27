@@ -387,7 +387,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     }
 
     return html`
-      <div class="wrapper">
+      <div class="wrapper ${entityConf.entity.replace('.', '_')}">
         <ha-icon-button
           @action=${this._handleEntityAction}
           .actionHandler=${actionHandler({
