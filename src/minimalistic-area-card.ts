@@ -379,7 +379,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       if (stateConfig) {
         icon = this._getOrDefault(entityId, stateConfig.icon, entityConf.icon);
         color = this._getOrDefault(entityId, stateConfig.color, entityConf.color);
-        hide = this._getOrDefault(entityId, stateConfig.hide, false);
+        hide = this._getOrDefault(entityId, stateConfig.hide, hide);
       }
     }
     if (hide) {
