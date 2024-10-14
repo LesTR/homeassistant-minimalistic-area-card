@@ -53,7 +53,7 @@
     "ts-jest": "^29.2.5",
     "tslib": "2.7.0",
     "ttsc": "^0.3.1",
-    "typescript": "^5.6.2",
+    "typescript": "^5.6.3",
     "typescript-eslint": "^8.8.1"
   },
   "scripts": {
