@@ -98,6 +98,7 @@ entities:
 ```
 hass : HomeAssistant - homeassistant object
 state : any - state value of given entity or null
+user : CurrentUser - structure represents the currently logged user
 ```
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/junalmeida/homeassistant-minimalistic-area-card.svg?style=for-the-badge

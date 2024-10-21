@@ -13,10 +13,11 @@ export function evalTemplate(entity: string | null, template: string, hass: Home
   }
 
   try {
-    return new Function('hass', 'state', 'html', `'use strict'; ${func}`).call(
+    return new Function('hass', 'state', 'user', 'html', `'use strict'; ${func}`).call(
       null,
       hass,
       entity != null ? hass.states[entity].state : null,
+      hass.user,
       html,
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -5,6 +5,9 @@ describe('Templates tests', () => {
   const sensor = 'binary_sensor.night';
   const hass: HomeAssistantExt = {
     connected: true,
+    user: {
+      name: 'test user',
+    },
     states: {
       'binary_sensor.night': {
         state: 'off',
@@ -22,6 +25,7 @@ describe('Templates tests', () => {
     { template: '${"something"}', expected: 'something' },
     { template: "${hass.states['" + sensor + "'].state == 'off'}", expected: true },
     { template: "${state == 'off'}", expected: true },
+    { template: "${user.name == 'test user'}", expected: true },
   ])('evalTemplate "%s"', ({ template, expected }) => {
     expect(evalTemplate(sensor, template, hass)).toBe(expected);
   });
