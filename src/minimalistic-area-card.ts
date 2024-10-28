@@ -37,7 +37,7 @@ import {
 import { HassEntity } from 'home-assistant-js-websocket/dist';
 import { version as pkgVersion } from '../package.json';
 import { customElement } from 'lit/decorators.js';
-import { evalTemplate } from './utils';
+import { evalTemplate, filterStateConfigs } from './utils';
 
 /* eslint no-console: 0 */
 console.info(
@@ -375,7 +375,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
     if (entityConf.state !== undefined && entityConf.state.length > 0) {
       const currentState = this.computeStateValue(stateObj, entity);
-      const stateConfig = entityConf.state.filter((i) => i.value == currentState)[0];
+      const stateConfig = filterStateConfigs(entityId, entityConf.state, currentState, this.hass);
       if (stateConfig) {
         icon = this._getOrDefault(entityId, stateConfig.icon, entityConf.icon);
         color = this._getOrDefault(entityId, stateConfig.color, entityConf.color);

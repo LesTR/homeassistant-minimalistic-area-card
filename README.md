@@ -68,17 +68,36 @@ For `tap_action` options, see https://www.home-assistant.io/dashboards/actions/.
           icon: mdi:door-closed
 ```
 
-State based settings:
+## State based overrides
+
+Example:
 
 ```yaml
 state: # array of values
   - value: value # state value to match
+    operator: '==' # optinal(default ==) - See state operators for details
     icon: mdi:my-icon" # entity icon used when state match
     color: color # color used when state match
     hide: false # Default false, conditionally hide the entity when state match given value
 ```
 
-## Templating support (experimental)
+### State operators
+
+The order of your elements in the `state` object matters. The first one which is `true` will match. This copied the functionality from [button-card](https://github.com/custom-cards/button-card).
+
+|  Operator  | `value` example | Description                                                                                                                                                                           |
+| :--------: | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|    `<`     | `5`             | Current state is inferior to `value`                                                                                                                                                  |
+|    `<=`    | `4`             | Current state is inferior or equal to `value`                                                                                                                                         |
+|    `==`    | `42` or `'on'`  | **This is the default if no operator is specified.** Current state is equal (`==` javascript) to `value`                                                                              |
+|    `>=`    | `32`            | Current state is superior or equal to `value`                                                                                                                                         |
+|    `>`     | `12`            | Current state is superior to `value`                                                                                                                                                  |
+|    `!=`    | `'normal'`      | Current state is not equal (`!=` javascript) to `value`                                                                                                                               |
+|  `regex`   | `'^norm.*$'`    | `value` regex applied to current state does match                                                                                                                                     |
+| `template` |                 | See [templates](#experimental-templating-support) for examples. `value` needs to be a javascript expression which returns a boolean. If the boolean is true, it will match this state |
+| `default`  | N/A             | If nothing matches, this is used                                                                                                                                                      |
+
+## Experimental Templating support
 
 You can use experimental support for templating that allows you to create a dynamic value based on the state or other attribute of any entity.
 Everything inside `${}` is now evaluated as a template.

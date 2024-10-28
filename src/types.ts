@@ -82,6 +82,7 @@ export type ExtendedEntityConfig = EntitiesCardEntityConfig & {
 };
 
 export type EntityStateConfig = {
+  operator?: '<' | '<=' | '==' | '>=' | '>' | '!=' | 'regex' | 'template' | 'default';
   value: string;
   icon?: string;
   color?: string;
