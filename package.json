@@ -54,7 +54,7 @@
     "tslib": "2.8.1",
     "ttsc": "^0.3.1",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.14.0"
+    "typescript-eslint": "^8.15.0"
   },
   "scripts": {
     "start": "rollup -c rollup.config.dev.mjs --watch",
