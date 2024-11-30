@@ -17,7 +17,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Build and test
         run: yarn build
@@ -28,7 +28,7 @@ jobs:
 
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: 'dist/minimalistic-area-card.js'
-          asset_name: minimalistic-area-card.js
+          file: 'dist/better-minimalistic-area-card.js'
+          asset_name: better-minimalistic-area-card.js
           tag: ${{ github.ref }}
           overwrite: true
