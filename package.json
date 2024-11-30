@@ -1,5 +1,5 @@
 {
-  "name": "minimalistic-area-card",
+  "name": "better-minimalistic-area-card",
   "version": "1.2.18",
   "description": "Minimalistic Area Card for Home Assistant",
   "keywords": [
@@ -10,7 +10,7 @@
     "lovelace",
     "custom-cards"
   ],
-  "module": "minimalistic-area-card.js",
+  "module": "better-minimalistic-area-card.js",
   "repository": "git@github.com:junalmeida/homeassistant-minimalistic-area-card.git",
   "author": "Marcos Junior <junalmeida@gmail.com>",
   "license": "MIT",
@@ -51,6 +51,7 @@
     "rollup-plugin-ignore": "^1.0.10",
     "rollup-plugin-serve": "^3.0.0",
     "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "tslib": "2.8.1",
     "ttsc": "^0.3.1",
     "typescript": "^5.7.2",

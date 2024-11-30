@@ -786,8 +786,20 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     `;
   }
 }
+
+@customElement('minimalistic-area-card')
+export class DepracatedMinimalisticAreaCard extends MinimalisticAreaCard {
+  constructor() {
+    console.warn(
+      "[DEPRECATED] You are using depracated card name 'custom:minimalistic-area-card', please update type to 'custom:better-minimalistic-area-card'. The old name will be removed in 1.3.0",
+    );
+    super();
+  }
+}
+
 declare global {
   interface HTMLElementTagNameMap {
-    'minimalistic-area-card': MinimalisticAreaCard;
+    'minimalistic-area-card': DepracatedMinimalisticAreaCard;
+    'better-minimalistic-area-card': MinimalisticAreaCard;
   }
 }

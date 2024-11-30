@@ -2,6 +2,6 @@ default_config:
 lovelace:
   mode: yaml
   resources:
-    - url: http://127.0.0.1:6000/minimalistic-area-card.js
+    - url: http://127.0.0.1:6000/better-minimalistic-area-card.js
       type: module
 demo:
