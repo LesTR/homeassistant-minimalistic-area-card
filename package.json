@@ -58,7 +58,6 @@
     "yarn-audit-fix": "^10.1.1"
   },
   "scripts": {
-    "install": "yarn install --frozen-lockfile",
     "start": "rollup -c rollup.config.dev.mjs --watch",
     "build": "yarn run lint && yarn run test && yarn run rollup",
     "prettier-check": "yarn prettier . --check",
