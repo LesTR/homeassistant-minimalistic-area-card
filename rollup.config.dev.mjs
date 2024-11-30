@@ -11,8 +11,8 @@ export default {
   input: ['src/minimalistic-area-card.ts'],
   strictDeprecations: true,
   output: {
-    dir: './dist',
     format: 'es',
+    file: 'dist/better-minimalistic-area-card.js',
     sourcemap: true,
   },
   plugins: [

@@ -4,7 +4,7 @@ import { Alignment, HomeAssistantExt, MinimalisticAreaCardConfig } from '../src/
 describe('Card test', () => {
   const card: MinimalisticAreaCard = new MinimalisticAreaCard();
   const config: MinimalisticAreaCardConfig = {
-    type: 'custom:minimalistic-area-card',
+    type: 'custom:better-minimalistic-area-card',
     title: 'Terrace',
     area: 'terrace',
     icon: 'mdi:balcony',
