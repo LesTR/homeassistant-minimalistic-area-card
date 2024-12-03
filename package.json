@@ -55,7 +55,7 @@
     "ttsc": "^0.3.1",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.16.0",
-    "yarn-audit-fix": "^10.1.0"
+    "yarn-audit-fix": "^10.1.1"
   },
   "scripts": {
     "start": "rollup -c rollup.config.dev.mjs --watch",
