@@ -1,5 +1,5 @@
 {
-  "name": "minimalistic-area-card",
+  "name": "better-minimalistic-area-card",
   "version": "1.2.18",
   "description": "Minimalistic Area Card for Home Assistant",
   "keywords": [
@@ -10,7 +10,7 @@
     "lovelace",
     "custom-cards"
   ],
-  "module": "minimalistic-area-card.js",
+  "module": "better-minimalistic-area-card.js",
   "repository": "git@github.com:junalmeida/homeassistant-minimalistic-area-card.git",
   "author": "Marcos Junior <junalmeida@gmail.com>",
   "license": "MIT",
