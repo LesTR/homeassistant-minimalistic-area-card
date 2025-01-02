@@ -8,11 +8,11 @@ A minimalistic area card to have a control panel of your house on your dashboard
 
 ![Sample preview](docs/sample.png)
 
-This is a fork of [junalmeida/homeassistant-minimalistic-area-card](https://github.com/junalmeida/homeassistant-minimalistic-area-card), and I would like to thank the original author. The reason for renaming can be found in [issue 128)(https://github.com/LesTR/homeassistant-minimalistic-area-card/issues/128).
+This is a fork of [junalmeida/homeassistant-minimalistic-area-card](https://github.com/junalmeida/homeassistant-minimalistic-area-card), and I would like to thank the original author. The reason for renaming can be found in [issue 128](https://github.com/LesTR/homeassistant-minimalistic-area-card/issues/128).
 
 ## Migration from the original card
 
-- install this one from HACS
+- install this one from HACS - NOT YET - see https://github.com/LesTR/homeassistant-minimalistic-area-card/issues/128 for details.
 - replace type from `custom:minimalistic-area-card` by `custom:better-minimalistic-area-card`.
 
 ## Options
