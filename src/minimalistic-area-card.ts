@@ -195,6 +195,12 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       });
     }
   }
+
+  public static async getConfigElement() {
+    await import('./editor');
+    return document.createElement('better-minimalistic-area-card-editor');
+  }
+
   // The user supplied configuration. Throw an exception and Home Assistant
   // will render an error card.
   public setConfig(config: MinimalisticAreaCardConfig): void {

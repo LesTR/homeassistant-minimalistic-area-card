@@ -14,6 +14,7 @@ export default {
     format: 'es',
     file: 'dist/better-minimalistic-area-card.js',
     sourcemap: true,
+    inlineDynamicImports: true,
   },
   plugins: [
     resolve(),

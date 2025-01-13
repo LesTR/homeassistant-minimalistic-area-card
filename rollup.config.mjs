@@ -40,6 +40,7 @@ export default [
     output: {
       format: 'es',
       file: 'dist/better-minimalistic-area-card.js',
+      inlineDynamicImports: true,
     },
     plugins: [...plugins],
   },
