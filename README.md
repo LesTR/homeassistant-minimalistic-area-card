@@ -129,6 +129,6 @@ user : CurrentUser - structure represents the currently logged user
 [devcontainer]: https://code.visualstudio.com/docs/remote/containers
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
 [forum]: https://community.home-assistant.io/c/projects/frontend
-[license-shield]: https://img.shields.io/github/license/junalmeida/homeassistant-minimalistic-area-card.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/junalmeida/homeassistant-minimalistic-area-card.svg?style=for-the-badge
-[releases]: https://github.com/junalmeida/homeassistant-minimalistic-area-card/releases
+[license-shield]: https://img.shields.io/github/license/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
+[releases-shield]: https://img.shields.io/github/release/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
+[releases]: https://github.com/lestr/homeassistant-minimalistic-area-card/releases
