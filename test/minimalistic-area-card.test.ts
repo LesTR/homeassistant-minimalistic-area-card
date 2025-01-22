@@ -1,5 +1,5 @@
 import { MinimalisticAreaCard } from '../src/minimalistic-area-card.ts';
-import { Alignment, HomeAssistantExt, MinimalisticAreaCardConfig } from '../src/types';
+import { Alignment, cardType, HomeAssistantExt, MinimalisticAreaCardConfig } from '../src/types';
 
 describe('Card test', () => {
   const card: MinimalisticAreaCard = new MinimalisticAreaCard();
@@ -105,5 +105,11 @@ describe('Card test', () => {
     expect(card.config.align?.sensors).toBe(Alignment.left);
     expect(card.config.align?.title_entities).toBe(Alignment.right);
     expect(card.config.align?.buttons).toBe(Alignment.right);
+  });
+
+  test('verify the card is registered in custom cards', () => {
+    expect(window['customCards']).toBeInstanceOf(Array);
+    const card = window['customCards'].find((c) => c.type == cardType);
+    expect(card.type).toBe(cardType);
   });
 });

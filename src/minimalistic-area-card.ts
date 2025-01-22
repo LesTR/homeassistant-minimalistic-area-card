@@ -809,3 +809,11 @@ declare global {
     'better-minimalistic-area-card': MinimalisticAreaCard;
   }
 }
+
+(window as any).customCards = (window as any).customCards || [];
+(window as any).customCards.push({
+  type: cardType,
+  name: 'Better minimalistic area card',
+  preview: true,
+  description: 'Better Minimalistic Area Card',
+});
