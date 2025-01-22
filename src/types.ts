@@ -53,6 +53,14 @@ export interface MinimalisticAreaCardConfig extends LovelaceCardConfig {
   state_color?: boolean;
   darken_image?: boolean;
   align?: AlignmentConfig;
+  grid_options?: LovelaceCardGridOptions;
+}
+
+export interface LovelaceCardGridOptions {
+  rows: number;
+  columns: number;
+  min_rows?: number;
+  min_columns?: number;
 }
 
 export interface HomeAssistantArea {

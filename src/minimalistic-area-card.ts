@@ -29,6 +29,7 @@ import {
   ExtendedEntityConfig,
   HomeAssistantArea,
   HomeAssistantExt,
+  LovelaceCardGridOptions,
   MinimalisticAreaCardConfig,
   STATES_OFF,
   UNAVAILABLE,
@@ -233,14 +234,14 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     return size;
   }
 
-  public getLayoutOptions() {
+  public getLayoutOptions(): LovelaceCardGridOptions {
     const size = this.getCardSize();
     return {
-      grid_rows: size,
-      grid_columns: 1,
-      grid_min_rows: 1,
-      grig_min_columns: 1,
-    };
+      rows: size,
+      columns: 1,
+      min_rows: 1,
+      min_columns: 1,
+    } as LovelaceCardGridOptions;
   }
 
   protected render() {

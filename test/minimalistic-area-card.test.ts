@@ -94,10 +94,10 @@ describe('Card test', () => {
 
   test('verify layout options', () => {
     const options = card.getLayoutOptions();
-    expect(options.grid_columns).toBe(1);
-    expect(options.grid_min_rows).toBe(1);
-    expect(options.grid_rows).toBe(3);
-    expect(options.grig_min_columns).toBe(1);
+    expect(options.columns).toBe(1);
+    expect(options.min_rows).toBe(1);
+    expect(options.rows).toBe(3);
+    expect(options.min_columns).toBe(1);
   });
 
   test('verify default alignment', () => {
