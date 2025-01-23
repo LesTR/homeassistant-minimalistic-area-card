@@ -67,6 +67,7 @@ export interface HomeAssistantArea {
   area_id: string;
   picture: string;
   name: string;
+  icon?: string;
 }
 
 export enum EntitySection {

@@ -94,6 +94,12 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         if (area) {
           this.area = area;
           this.areaEntities = MinimalisticAreaCard.findAreaEntities(this.hass, area.area_id);
+          if (!this.config.icon) {
+            this.config.icon = area.icon;
+          } else {
+            // Backward compatibility
+            this.config.show_area_icon = true;
+          }
         } else {
           this.area = undefined;
           this.areaEntities = undefined;
@@ -321,7 +327,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
   private renderAreaIcon(areaConfig: MinimalisticAreaCardConfig) {
     if (
       this._getOrDefault(null, areaConfig.icon, '').trim().length == 0 ||
-      !this._getOrDefault(null, areaConfig.show_area_icon, true)
+      !this._getOrDefault(null, areaConfig.show_area_icon, false)
     ) {
       return html``;
     }
