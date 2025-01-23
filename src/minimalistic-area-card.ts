@@ -317,8 +317,8 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     `;
     return html`
       <div class="card-header align-${this.config.align?.title?.toLocaleLowerCase()}">
-        ${this.config.align?.title_entities == Alignment.left ? entitites : ''}
-        ${this.renderAreaIcon(this.config)}${this.config.title}
+        ${this.config.align?.title_entities == Alignment.left ? entitites : ''} ${this.renderAreaIcon(this.config)}
+        <span class="title">${this.config.title}</span>
         ${this.config.align?.title_entities != Alignment.left ? entitites : ''}
       </div>
     `;
@@ -696,7 +696,8 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
         padding: 0;
         font-size: 14px;
-        color: var(--ha-picture-card-text-color, white);
+        color: var(--primary-text-color, black);
+        background: var(--ha-card-background, var(--card-background-color, white));
         z-index: 1;
       }
 
@@ -704,6 +705,14 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         padding: 10px 15px;
         font-weight: bold;
         font-size: 1.2em;
+      }
+
+      .box .card-header ha-icon {
+        color: var(--primary-text-color, black);
+      }
+
+      .box .card-header .title {
+        color: var(--ha-picture-card-text-color, white);
       }
 
       .box .sensors {
@@ -777,9 +786,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       }
       .box ha-icon-button state-badge.shadow {
         filter: drop-shadow(2px 2px 2px gray);
-      }
-      .box ha-icon-button.state-on state-badge {
-        color: var(--ha-picture-icon-button-on-color, white);
       }
 
       .box .sensors .wrapper > * {
