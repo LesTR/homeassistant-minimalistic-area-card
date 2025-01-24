@@ -643,18 +643,14 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         position: relative;
         min-height: 48px;
         height: 100%;
-        z-index: 0;
       }
 
       img {
         display: block;
         height: 100%;
         width: 100%;
-
         object-fit: cover;
-
         position: absolute;
-        z-index: -1;
         pointer-events: none;
         border-radius: var(--ha-card-border-radius, 12px);
       }
@@ -672,7 +668,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         left: 0;
         top: 0;
 
-        z-index: -1;
         pointer-events: none;
         border-radius: var(--ha-card-border-radius, 12px);
       }
@@ -698,13 +693,14 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         font-size: 14px;
         color: var(--primary-text-color, black);
         background: var(--ha-card-background, var(--card-background-color, white));
-        z-index: 1;
+        border-radius: var(--ha-card-border-radius, 12px);
       }
 
       .box .card-header {
         padding: 10px 15px;
         font-weight: bold;
         font-size: 1.2em;
+        z-index: 1;
       }
 
       .box .card-header ha-icon {
@@ -723,6 +719,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         margin-right: 5px;
         font-size: 0.9em;
         line-height: 13px;
+        z-index: 1;
       }
 
       .box .card-header .title-entities {
@@ -743,6 +740,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         min-height: 10px;
         width: 100%;
         margin-top: auto;
+        z-index: 1;
       }
 
       .title-entities-left {
