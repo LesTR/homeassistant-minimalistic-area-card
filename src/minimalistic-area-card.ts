@@ -25,7 +25,6 @@ import {
   cardType,
   EntityRegistryDisplayEntry,
   EntitySection,
-  EntityType,
   ExtendedEntityConfig,
   HomeAssistantArea,
   HomeAssistantExt,
@@ -158,11 +157,11 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     if (typeof item === 'string') {
       return {
         entity: item,
-        entity_type: EntityType.auto,
+        section: EntitySection.auto,
       } as ExtendedEntityConfig;
     } else {
       return {
-        entity_type: this._getOrDefault(item.entity, item.entity_type, EntityType.auto),
+        section: this._getOrDefault(item.entity, item.section, EntitySection.auto),
         ...item,
       };
     }
@@ -383,7 +382,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     const active = stateObj && stateObj.state && STATES_OFF.indexOf(stateObj.state.toString().toLowerCase()) === -1;
     const title = `${stateObj.attributes?.friendly_name || stateObj.entity_id}: ${computeStateDisplay(this.hass?.localize, stateObj, this.hass?.locale)}`;
 
-    const isSensor = entityConf.entity_type == EntityType.sensor || SENSORS.indexOf(domain) !== -1;
+    const isSensor = entityConf.section == EntitySection.sensors || SENSORS.indexOf(domain) !== -1;
 
     let icon = entityConf.icon;
     let color = entityConf.color;
