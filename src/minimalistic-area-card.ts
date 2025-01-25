@@ -331,7 +331,15 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     ) {
       return html``;
     }
-    return html` <ha-icon icon=${ifDefined(areaConfig.icon)}></ha-icon> `;
+
+    return html`
+      <ha-icon
+        icon=${ifDefined(areaConfig.icon)}
+        class=${classMap({
+          shadow: this.config.shadow === undefined ? false : this.config.shadow,
+        })}
+      ></ha-icon>
+    `;
   }
 
   private renderEntity(entityConf: ExtendedEntityConfig) {
@@ -679,7 +687,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       }
 
       .box {
-        text-shadow: 1px 1px 2px black;
+        text-shadow: 1px 1px 2px var(--primary-text-color, black);
         background-color: transparent;
 
         display: flex;
@@ -692,7 +700,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         padding: 0;
         font-size: 14px;
         color: var(--primary-text-color, black);
-        background: var(--ha-card-background, var(--card-background-color, white));
         border-radius: var(--ha-card-border-radius, 12px);
       }
 
@@ -782,7 +789,8 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         line-height: 0px;
         color: var(--ha-picture-icon-button-color, #a9a9a9);
       }
-      .box ha-icon-button state-badge.shadow {
+      .box ha-icon-button state-badge.shadow,
+      .box .card-header ha-icon.shadow {
         filter: drop-shadow(2px 2px 2px gray);
       }
 
