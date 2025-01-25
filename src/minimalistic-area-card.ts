@@ -296,7 +296,12 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
             </div>`
           : null}
 
-        <div class="box">
+        <div
+          class="${classMap({
+            box: true,
+            shadow: this._getOrDefault(null, this.config.shadow, false),
+          })}"
+        >
           ${this.renderTitle()}
           <div class="sensors align-${this.config.align?.sensors?.toLocaleLowerCase()}">
             ${this._entitiesSensor.map((entityConf) => this.renderEntity(entityConf))}
@@ -332,14 +337,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       return html``;
     }
 
-    return html`
-      <ha-icon
-        icon=${ifDefined(areaConfig.icon)}
-        class=${classMap({
-          shadow: this.config.shadow === undefined ? false : this.config.shadow,
-        })}
-      ></ha-icon>
-    `;
+    return html` <ha-icon icon=${ifDefined(areaConfig.icon)}></ha-icon> `;
   }
 
   private renderEntity(entityConf: ExtendedEntityConfig) {
@@ -375,9 +373,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         <div class="wrapper">
           <hui-warning-element
             .label=${createEntityNotFoundWarning(this.hass, entityConf.entity)}
-            class=${classMap({
-              shadow: this.config.shadow === undefined ? false : this.config.shadow,
-            })}
           ></hui-warning-element>
         </div>
       `;
@@ -416,7 +411,9 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
             hasDoubleClick: hasAction(entityConf.double_tap_action),
           })}
           .config=${entityConf}
-          class=${classMap({ 'state-on': active })}
+          class=${classMap({
+            'state-on': active,
+          })}
         >
           <state-badge
             .hass=${this.hass}
@@ -429,9 +426,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
                 ? this.config.state_color
                 : true}
             .color=${color}
-            class=${classMap({
-              shadow: this.config.shadow === undefined ? false : this.config.shadow,
-            })}
           ></state-badge>
         </ha-icon-button>
         ${isSensor && entityConf.show_state
@@ -699,7 +693,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       }
 
       .box {
-        text-shadow: 1px 1px 2px var(--primary-text-color, black);
         background-color: transparent;
 
         display: flex;
@@ -714,20 +707,11 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         color: var(--primary-text-color, black);
         border-radius: var(--ha-card-border-radius, 12px);
       }
-
       .box .card-header {
         padding: 10px 15px;
         font-weight: bold;
         font-size: 1.2em;
         z-index: 1;
-      }
-
-      .box .card-header ha-icon {
-        color: var(--primary-text-color, black);
-      }
-
-      .box .card-header .title {
-        color: var(--ha-picture-card-text-color, white);
       }
 
       .box .sensors {
@@ -801,9 +785,13 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         line-height: 0px;
         color: var(--ha-picture-icon-button-color, #a9a9a9);
       }
-      .box ha-icon-button state-badge.shadow,
-      .box .card-header ha-icon.shadow {
-        filter: drop-shadow(2px 2px 2px gray);
+
+      .shadow,
+      .shadow ha-icon-button,
+      .shadow state-badge,
+      .shadow ha-icon {
+        text-shadow: 1px 1px 2px gray;
+        filter: drop-shadow(1px 1px 2px gray);
       }
 
       .box .sensors .wrapper > * {
@@ -816,9 +804,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
       .box .wrapper hui-warning-element {
         display: block;
-      }
-      .box .wrapper hui-warning-element.shadow {
-        filter: drop-shadow(2px 2px 2px gray);
       }
     `;
   }
