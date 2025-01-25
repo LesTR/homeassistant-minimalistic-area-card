@@ -574,6 +574,12 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       }
     }
 
+    const areaKey = this.config.area;
+    // Update when area changed.
+    if (oldHass && areaKey && this.hass.areas[areaKey] && oldHass.area[areaKey] !== this.hass.areas[areaKey]) {
+      return true;
+    }
+
     return false;
   }
 
