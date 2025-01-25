@@ -21,12 +21,6 @@ export enum Alignment {
   center = 'center',
 }
 
-export enum EntityType {
-  auto = 'auto',
-  sensor = 'sensor',
-  button = 'button',
-}
-
 export type AlignmentConfig = {
   title?: Alignment;
   sensors?: Alignment;
@@ -87,7 +81,6 @@ export type ExtendedEntityConfig = EntitiesCardEntityConfig & {
   color?: string;
   state?: EntityStateConfig[];
   section?: EntitySection;
-  entity_type?: EntityType;
 };
 
 export type EntityStateConfig = {
