@@ -36,7 +36,6 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
   state_color: true # enable or disable HA colors for all entities
   shadow: true # enable a drop shadow on entity icons to contrast with the background
   darken_image: true # reduce brightness of the background image to constrast with entities
-  entity_type: auto # auto, sensor, button (optional)
   align:
     title: left # text align, values: left, right, center (optional)
     sensors: left # text align, values: left, right, center (optional)

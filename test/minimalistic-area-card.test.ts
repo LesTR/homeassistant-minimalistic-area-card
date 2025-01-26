@@ -112,4 +112,11 @@ describe('Card test', () => {
     const card = window['customCards'].find((c) => c.type == cardType);
     expect(card.type).toBe(cardType);
   });
+
+  test('verify entities are in the correct sections', () => {
+    expect(card['_entitiesSensor'].length).toBe(4);
+    expect(card['_entitiesButtons'].length).toBe(2);
+    expect(card['_entitiesTitle'].length).toBe(1);
+    expect(card['_entitiesTemplated'].length).toBe(1);
+  });
 });

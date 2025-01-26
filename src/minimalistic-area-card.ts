@@ -25,7 +25,6 @@ import {
   cardType,
   EntityRegistryDisplayEntry,
   EntitySection,
-  EntityType,
   ExtendedEntityConfig,
   HomeAssistantArea,
   HomeAssistantExt,
@@ -158,11 +157,11 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     if (typeof item === 'string') {
       return {
         entity: item,
-        entity_type: EntityType.auto,
+        section: EntitySection.auto,
       } as ExtendedEntityConfig;
     } else {
       return {
-        entity_type: this._getOrDefault(item.entity, item.entity_type, EntityType.auto),
+        section: this._getOrDefault(item.entity, item.section, EntitySection.auto),
         ...item,
       };
     }
@@ -296,7 +295,12 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
             </div>`
           : null}
 
-        <div class="box">
+        <div
+          class="${classMap({
+            box: true,
+            shadow: this._getOrDefault(null, this.config.shadow, false),
+          })}"
+        >
           ${this.renderTitle()}
           <div class="sensors align-${this.config.align?.sensors?.toLocaleLowerCase()}">
             ${this._entitiesSensor.map((entityConf) => this.renderEntity(entityConf))}
@@ -331,6 +335,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     ) {
       return html``;
     }
+
     return html` <ha-icon icon=${ifDefined(areaConfig.icon)}></ha-icon> `;
   }
 
@@ -367,9 +372,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         <div class="wrapper">
           <hui-warning-element
             .label=${createEntityNotFoundWarning(this.hass, entityConf.entity)}
-            class=${classMap({
-              shadow: this.config.shadow === undefined ? false : this.config.shadow,
-            })}
           ></hui-warning-element>
         </div>
       `;
@@ -380,7 +382,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     const active = stateObj && stateObj.state && STATES_OFF.indexOf(stateObj.state.toString().toLowerCase()) === -1;
     const title = `${stateObj.attributes?.friendly_name || stateObj.entity_id}: ${computeStateDisplay(this.hass?.localize, stateObj, this.hass?.locale)}`;
 
-    const isSensor = entityConf.entity_type == EntityType.sensor || SENSORS.indexOf(domain) !== -1;
+    const isSensor = entityConf.section == EntitySection.sensors || SENSORS.indexOf(domain) !== -1;
 
     let icon = entityConf.icon;
     let color = entityConf.color;
@@ -408,7 +410,9 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
             hasDoubleClick: hasAction(entityConf.double_tap_action),
           })}
           .config=${entityConf}
-          class=${classMap({ 'state-on': active })}
+          class=${classMap({
+            'state-on': active,
+          })}
         >
           <state-badge
             .hass=${this.hass}
@@ -421,9 +425,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
                 ? this.config.state_color
                 : true}
             .color=${color}
-            class=${classMap({
-              shadow: this.config.shadow === undefined ? false : this.config.shadow,
-            })}
           ></state-badge>
         </ha-icon-button>
         ${isSensor && entityConf.show_state
@@ -566,6 +567,18 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       }
     }
 
+    const areaKey = this.config.area;
+    // Update when area changed.
+    if (
+      oldHass &&
+      areaKey &&
+      this.hass.areas[areaKey] &&
+      oldHass.area &&
+      oldHass.area[areaKey] !== this.hass.areas[areaKey]
+    ) {
+      return true;
+    }
+
     return false;
   }
 
@@ -679,7 +692,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       }
 
       .box {
-        text-shadow: 1px 1px 2px black;
         background-color: transparent;
 
         display: flex;
@@ -692,23 +704,13 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         padding: 0;
         font-size: 14px;
         color: var(--primary-text-color, black);
-        background: var(--ha-card-background, var(--card-background-color, white));
         border-radius: var(--ha-card-border-radius, 12px);
       }
-
       .box .card-header {
         padding: 10px 15px;
         font-weight: bold;
         font-size: 1.2em;
         z-index: 1;
-      }
-
-      .box .card-header ha-icon {
-        color: var(--primary-text-color, black);
-      }
-
-      .box .card-header .title {
-        color: var(--ha-picture-card-text-color, white);
       }
 
       .box .sensors {
@@ -782,8 +784,13 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         line-height: 0px;
         color: var(--ha-picture-icon-button-color, #a9a9a9);
       }
-      .box ha-icon-button state-badge.shadow {
-        filter: drop-shadow(2px 2px 2px gray);
+
+      .shadow,
+      .shadow ha-icon-button,
+      .shadow state-badge,
+      .shadow ha-icon {
+        text-shadow: 1px 1px 2px gray;
+        filter: drop-shadow(1px 1px 2px gray);
       }
 
       .box .sensors .wrapper > * {
@@ -796,9 +803,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
       .box .wrapper hui-warning-element {
         display: block;
-      }
-      .box .wrapper hui-warning-element.shadow {
-        filter: drop-shadow(2px 2px 2px gray);
       }
     `;
   }
