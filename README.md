@@ -44,12 +44,11 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
   tap_action:
     action: navigate
     navigation_path: /lovelace/living-room
-
   entities: #optional, lists area entities automatically if ommited.
     - entity: media_player.living_room_tv
       state_color: false # enable or disable HA colors for this entity
       hide: false # show/hide entity (optional), default false
-      force_dialog: false # force dialog for buttons instead of calling toogle      
+      force_dialog: false # force dialog for buttons instead of calling toogle
       section: auto # define the section where to show given entity (optional), default 'auto', possible values: auto, sensors, buttons, title. Sensors means the first line, buttons the second one, title op.
     - entity: switch.fireplace_on_off
     - entity: cover.window_covering
