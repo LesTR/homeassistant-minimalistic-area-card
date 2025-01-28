@@ -1,5 +1,5 @@
 import { MinimalisticAreaCard } from '../src/minimalistic-area-card.ts';
-import { Alignment, cardType, HomeAssistantExt, MinimalisticAreaCardConfig } from '../src/types';
+import { Alignment, cardType, EntitySection, HomeAssistantExt, MinimalisticAreaCardConfig } from '../src/types';
 
 describe('Card test', () => {
   const card: MinimalisticAreaCard = new MinimalisticAreaCard();
@@ -24,6 +24,7 @@ describe('Card test', () => {
       },
       {
         entity: 'sensor.watering_v2_watertank_percent',
+        hide: '${hass.states["vacuum.my_vacuum"].state !== "docked"}',
       },
       {
         entity: 'input_boolean.terrace_watering_allow_sleep',
@@ -78,6 +79,9 @@ describe('Card test', () => {
       'binary_sensor.night': {
         state: 'off',
       },
+      'vacuum.my_vacuum': {
+        state: 'docked',
+      },
     },
   } as unknown as HomeAssistantExt;
 
@@ -117,6 +121,11 @@ describe('Card test', () => {
     expect(card['_entitiesSensor'].length).toBe(4);
     expect(card['_entitiesButtons'].length).toBe(2);
     expect(card['_entitiesTitle'].length).toBe(1);
-    expect(card['_entitiesTemplated'].length).toBe(1);
+    expect(card['_entitiesTemplated']).toEqual(
+      expect.arrayContaining([
+        { entity: 'vacuum.my_vacuum', section: EntitySection.auto },
+        { entity: 'binary_sensor.night', section: EntitySection.auto },
+      ]),
+    );
   });
 });
