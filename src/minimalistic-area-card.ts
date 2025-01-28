@@ -67,7 +67,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
   private area?: HomeAssistantArea;
   private areaEntities?: string[];
   private _templatedEntityNameRegexp = RegExp(
-    /["']((input_([^.]+)|(binary_)?sensor|number|switch|fan|light|climate)\.[a-z_]+)["']/,
+    /["']((input_([^.]+)|(binary_)?sensor|number|switch|fan|light|climate|vacuum)\.[a-z_]+)["']/,
     'gmsid',
   );
   private configChanged = true;
