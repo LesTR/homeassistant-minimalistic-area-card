@@ -47,7 +47,14 @@ export interface MinimalisticAreaCardConfig extends LovelaceCardConfig {
   state_color?: boolean;
   darken_image?: boolean;
   align?: AlignmentConfig;
+  style?: StyleOptions;
   grid_options?: LovelaceCardGridOptions;
+}
+
+export interface StyleOptions {
+  color?: string;
+  background_color?: string;
+  shadow_color?: string;
 }
 
 export interface LovelaceCardGridOptions {
