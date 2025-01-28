@@ -17,6 +17,7 @@ import {
 import { css, CSSResultGroup, html, LitElement, nothing, PropertyValues } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { styleMap, StyleInfo } from 'lit-html/directives/style-map.js';
 import { actionHandler } from './action-handler-directive';
 import { findEntities } from './find-entities';
 import {
@@ -31,17 +32,18 @@ import {
   LovelaceCardGridOptions,
   MinimalisticAreaCardConfig,
   STATES_OFF,
+  StyleOptions,
   UNAVAILABLE,
 } from './types';
 
 import { HassEntity } from 'home-assistant-js-websocket/dist';
 import { version as pkgVersion } from '../package.json';
 import { customElement } from 'lit/decorators.js';
-import { evalTemplate, filterStateConfigs } from './utils';
+import { deprecatedWarning, evalTemplate, filterStateConfigs } from './utils';
 
 /* eslint no-console: 0 */
 console.info(
-  `%c  Minimalistic Area Card  %c ${pkgVersion} `,
+  `%c  Better Minimalistic Area Card  %c ${pkgVersion} `,
   'color: orange; font-weight: bold; background: black',
   'color: white; font-weight: bold; background: dimgray',
 );
@@ -234,11 +236,11 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     if (!config || (config.entities && !Array.isArray(config.entities))) {
       throw new Error('Invalid configuration');
     }
-
     this.config = {
       hold_action: { action: 'more-info' },
       ...config,
     };
+
     this.config.align = {
       title: this._getOrDefault(null, config.align?.title, Alignment.left),
       sensors: this._getOrDefault(null, config.align?.sensors, Alignment.left),
@@ -246,6 +248,19 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       title_entities: this._getOrDefault(null, config.align?.title_entities, Alignment.right),
       ...config.align,
     } as AlignmentConfig;
+
+    if (this.config.style == undefined) {
+      this.config.style = {} as StyleOptions;
+    }
+    if (config.background_color) {
+      deprecatedWarning(
+        'The top level option "background_color" was deprecated, please use "style.background_color" instead.',
+      );
+      if (!this.config.style.background_color) {
+        this.config.style.background_color = config.background_color;
+      }
+    }
+
     this.configChanged = true;
   }
 
@@ -275,7 +290,21 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       return nothing;
     }
 
-    const background_color = this.config.background_color ? `background-color: ${this.config.background_color}` : '';
+    const style = {};
+    if (this.config.style) {
+      style['--ha-better-minimalistic-area-card-background-color'] = this._getOrDefault(
+        null,
+        this.config.style.background_color,
+        '',
+      );
+      style['--ha-better-minimalistic-area-card-color'] = this._getOrDefault(null, this.config.style.color, '');
+      style['--ha-better-minimalistic-area-card-shadow-color'] = this._getOrDefault(
+        null,
+        this.config.style.shadow_color,
+        '',
+      );
+    }
+
     let imageUrl: string | undefined = undefined;
     if (!this.config.camera_image && (this.config.image || this.area?.picture)) {
       imageUrl = new URL(this.config.image || this.area?.picture || '', this.hass.auth.data.hassUrl).toString();
@@ -284,7 +313,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     return html`
       <ha-card
         @action=${this._handleThisAction}
-        style=${background_color}
+        style=${styleMap(style)}
         .actionHandler=${actionHandler({
           hasHold: hasAction(this.config.hold_action),
           hasDoubleClick: hasAction(this.config.double_tap_action),
@@ -412,7 +441,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       const stateConfig = filterStateConfigs(entityId, entityConf.state, currentState, this.hass);
       if (stateConfig) {
         icon = this._getOrDefault(entityId, stateConfig.icon, entityConf.icon);
-        color = this._getOrDefault(entityId, stateConfig.color, entityConf.color);
+        color = this._getOrDefault(entityId, stateConfig.color, color);
         hide = this._getOrDefault(entityId, stateConfig.hide, hide);
       }
     }
@@ -711,8 +740,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       }
 
       .box {
-        background-color: transparent;
-
+        background-color: var(--ha-better-minimalistic-area-card-background-color, transparent);
         display: flex;
         flex-flow: column nowrap;
         justify-content: flex-start;
@@ -722,7 +750,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
         padding: 0;
         font-size: 14px;
-        color: var(--primary-text-color, black);
+        color: var(--ha-better-minimalistic-area-card-color, var(--primary-text-color, black));
         border-radius: var(--ha-card-border-radius, 12px);
       }
       .box .card-header {
@@ -754,8 +782,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
       .box .buttons {
         display: block;
-        background-color: var(--ha-picture-card-background-color, rgba(0, 0, 0, 0.1));
-        background-color: transparent;
         padding-top: 10px;
         padding-bottom: 10px;
         min-height: 10px;
@@ -800,16 +826,18 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         margin-bottom: -8px;
       }
       .box ha-icon-button state-badge {
+        color: var(--ha-better-minimalistic-area-card-color, var(--ha-picture-icon-button-color, #a9a9a9));
         line-height: 0px;
-        color: var(--ha-picture-icon-button-color, #a9a9a9);
       }
 
-      .shadow,
+      .shadow {
+        text-shadow: 1px 1px 2px var(--ha-better-minimalistic-area-card-shadow-color, gray);
+      }
+
       .shadow ha-icon-button,
       .shadow state-badge,
       .shadow ha-icon {
-        text-shadow: 1px 1px 2px gray;
-        filter: drop-shadow(1px 1px 2px gray);
+        filter: drop-shadow(1px 1px 2px var(--ha-better-minimalistic-area-card-shadow-color, gray));
       }
 
       .box .sensors .wrapper > * {
@@ -830,8 +858,8 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 @customElement('minimalistic-area-card')
 export class DeprecatedMinimalisticAreaCard extends MinimalisticAreaCard {
   constructor() {
-    console.warn(
-      "[DEPRECATED] You are using deprecated card name 'custom:minimalistic-area-card', please update type to 'custom:better-minimalistic-area-card'. The old name will be removed in 1.3.0",
+    deprecatedWarning(
+      "You are using deprecated card name 'custom:minimalistic-area-card', please update type to 'custom:better-minimalistic-area-card'. The old name will be removed in 1.3.0",
     );
     super();
   }
