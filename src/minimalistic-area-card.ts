@@ -66,10 +66,31 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
   config!: MinimalisticAreaCardConfig;
   private area?: HomeAssistantArea;
   private areaEntities?: string[];
-  private _templatedEntityNameRegexp = RegExp(
-    /["']((input_([^.]+)|(binary_)?sensor|number|switch|fan|light|climate|vacuum)\.[a-z_]+)["']/,
-    'gmsid',
-  );
+  private _domainsInTemplates = [
+    'input_([^.]+)',
+    '(binary_)?sensor',
+    'number',
+    'switch',
+    'fan',
+    'light',
+    'climate',
+    'vacuum',
+    'camera',
+    'cover',
+    'device',
+    'lock',
+    'media_player',
+    'valve',
+    'select',
+    'weather',
+    'water_heater',
+    'humidifier',
+    'image',
+    'siren',
+    'scene',
+    'todo',
+  ];
+  private _templatedEntityNameRegexp = RegExp(`["']((${this._domainsInTemplates.join('|')})[.][a-z_]+)["']`, 'gmsid');
   private configChanged = true;
 
   private _entitiesSensor: Array<ExtendedEntityConfig> = [];

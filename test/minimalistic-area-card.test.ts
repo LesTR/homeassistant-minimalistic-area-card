@@ -1,5 +1,7 @@
+import { EntityConfig } from '@dermotduffy/custom-card-helpers';
 import { MinimalisticAreaCard } from '../src/minimalistic-area-card.ts';
 import { Alignment, cardType, EntitySection, HomeAssistantExt, MinimalisticAreaCardConfig } from '../src/types';
+import { state } from 'lit/decorators';
 
 describe('Card test', () => {
   const card: MinimalisticAreaCard = new MinimalisticAreaCard();
@@ -126,6 +128,60 @@ describe('Card test', () => {
         { entity: 'vacuum.my_vacuum', section: EntitySection.auto },
         { entity: 'binary_sensor.night', section: EntitySection.auto },
       ]),
+    );
+  });
+});
+
+describe('Vefify entities', () => {
+  test.each([
+    'input_number',
+    'binary_sensor',
+    'sensor',
+    'number',
+    'switch',
+    'fan',
+    'light',
+    'climate',
+    'vacuum',
+    'camera',
+    'cover',
+    'device',
+    'lock',
+    'media_player',
+    'select',
+    'weather',
+    'water_heater',
+    'humidifier',
+    'image',
+    'siren',
+    'scene',
+    'todo',
+  ])('all domains are parsed properly in templates', (domain) => {
+    const entity = domain + '.my_sensor';
+    const card: MinimalisticAreaCard = new MinimalisticAreaCard();
+    const config: MinimalisticAreaCardConfig = {
+      entities: [
+        {
+          entity: entity,
+          hide: '${hass.states["' + entity + '"].state == "off}',
+        } as EntityConfig,
+      ],
+    } as MinimalisticAreaCardConfig;
+    const hassStates = {};
+    hassStates[entity] = { state: 'off', entity_id: entity };
+
+    const hass: HomeAssistantExt = {
+      connected: true,
+      states: hassStates,
+    } as unknown as HomeAssistantExt;
+
+    card.hass = hass;
+    card.setConfig(config);
+    // Hack to call protected method
+    card['setEntities']();
+
+    expect(card['_entitiesTemplated']).toEqual(
+      expect.arrayContaining([{ entity: entity, section: EntitySection.auto }]),
     );
   });
 });
