@@ -366,9 +366,9 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       return nothing;
     }
     const entity = this.hass.entities[entityConf.entity] as EntityRegistryDisplayEntry;
-    const entityId = entity.entity_id;
+    const entityId = entityConf.entity.trim();
 
-    const domain = computeDomain(stateObj.entity_id);
+    const domain = computeDomain(entityId);
 
     const dialog =
       this._getOrDefault(entityId, entityConf.force_dialog, false) || DOMAINS_TOGGLE.indexOf(domain) === -1;
@@ -391,9 +391,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     if ((!stateObj || stateObj.state === UNAVAILABLE) && !this.config.hide_unavailable) {
       return html`
         <div class="wrapper">
-          <hui-warning-element
-            .label=${createEntityNotFoundWarning(this.hass, entityConf.entity)}
-          ></hui-warning-element>
+          <hui-warning-element .label=${createEntityNotFoundWarning(this.hass, entityId)}></hui-warning-element>
         </div>
       `;
     } else if ((!stateObj || stateObj.state === UNAVAILABLE) && this.config.hide_unavailable) {
@@ -401,12 +399,12 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     }
 
     const active = stateObj && stateObj.state && STATES_OFF.indexOf(stateObj.state.toString().toLowerCase()) === -1;
-    const title = `${stateObj.attributes?.friendly_name || stateObj.entity_id}: ${computeStateDisplay(this.hass?.localize, stateObj, this.hass?.locale)}`;
+    const title = `${stateObj.attributes?.friendly_name || entityId}: ${computeStateDisplay(this.hass?.localize, stateObj, this.hass?.locale)}`;
 
     const isSensor = entityConf.section == EntitySection.sensors || SENSORS.indexOf(domain) !== -1;
 
-    let icon = entityConf.icon;
-    let color = entityConf.color;
+    let icon = this._getOrDefault(entityId, entityConf.icon, '');
+    let color = this._getOrDefault(entityId, entityConf.color, '');
     let hide = this._getOrDefault(entityId, entityConf.hide, false);
 
     if (entityConf.state !== undefined && entityConf.state.length > 0) {
