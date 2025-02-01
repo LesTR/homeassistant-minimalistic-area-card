@@ -12,7 +12,7 @@ This is a fork of [junalmeida/homeassistant-minimalistic-area-card](https://gith
 
 ## Migration from the original card
 
-- install this one from HACS - NOT YET - see https://github.com/LesTR/homeassistant-minimalistic-area-card/issues/128 for details.
+- install this one from HACS - NOT YET - see [issue-128](https://github.com/LesTR/homeassistant-minimalistic-area-card/issues/128) for details.
 - replace type from `custom:minimalistic-area-card` by `custom:better-minimalistic-area-card`.
 
 ## Options
@@ -26,7 +26,6 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
   title: Living Room
   image: /local/img/living-room.jpg #any image file on /config/www or an absolute image url. optional, it uses area image if area is specified. (optional)
   area: living_room # area id of an existing area defined in HA. (optional)
-  background_color: yellow # a color name, rgb hex or rgba function when an image is not provided (optional)
   camera_image: camera.living_room # a camera entity to use as background (optional)
   camera_view: 'auto' # auto, live (optional)
   icon: mdi:sofa (optional) Override the area icon.
@@ -36,6 +35,9 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
   state_color: true # enable or disable HA colors for all entities
   shadow: true # enable a drop shadow on entity icons to contrast with the background
   darken_image: true # reduce brightness of the background image to constrast with entities
+  style:
+    color: red # Override the color for text and icons (optional)
+    background_color: yellow # a color name, rgb hex or rgba function when an image is not provided (optional)
   align:
     title: left # text align, values: left, right, center (optional)
     sensors: left # text align, values: left, right, center (optional)
@@ -123,11 +125,6 @@ state : any - state value of given entity or null
 user : CurrentUser - structure represents the currently logged user
 ```
 
-[commits-shield]: https://img.shields.io/github/commit-activity/y/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
-[commits]: https://github.com/lestr/homeassistant-minimalistic-area-card/commits/main
-[devcontainer]: https://code.visualstudio.com/docs/remote/containers
-[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
-[forum]: https://community.home-assistant.io/c/projects/frontend
 [license-shield]: https://img.shields.io/github/license/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
 [releases]: https://github.com/lestr/homeassistant-minimalistic-area-card/releases

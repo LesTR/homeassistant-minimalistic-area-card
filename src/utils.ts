@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { EntityStateConfig, HomeAssistantExt } from './types';
+import { cardType, EntityStateConfig, HomeAssistantExt } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function evalTemplate(entity: string | null, template: string, hass: HomeAssistantExt): any {
@@ -66,4 +66,8 @@ export function filterStateConfigs(
     return match[0];
   }
   return defaultValue;
+}
+
+export function deprecatedWarning(message): void {
+  console.warn('[DEPRECATED][%s] %s', cardType, message);
 }
