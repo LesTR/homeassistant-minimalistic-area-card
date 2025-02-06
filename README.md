@@ -49,6 +49,7 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
       state_color: false # enable or disable HA colors for this entity
       hide: false # show/hide entity (optional), default false
       force_dialog: false # force dialog for buttons instead of calling toogle
+      show_state: true #show/hide state for sensors (binary_sensors are hidden by default) (optional, default true)
       section: auto # define the section where to show given entity (optional), default 'auto', possible values: auto, sensors, buttons, title. Sensors means the first line, buttons the second one, title op.
     - entity: switch.fireplace_on_off
     - entity: cover.window_covering
