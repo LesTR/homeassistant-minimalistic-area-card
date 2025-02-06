@@ -855,6 +855,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
   }
 }
 
+/** @deprecated replaced by  MinimalisticAreaCard */
 @customElement('minimalistic-area-card')
 export class DeprecatedMinimalisticAreaCard extends MinimalisticAreaCard {
   constructor() {

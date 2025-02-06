@@ -35,6 +35,7 @@ export interface MinimalisticAreaCardConfig extends LovelaceCardConfig {
   area?: string;
   camera_image?: string;
   camera_view?: 'auto' | 'live';
+  /** @deprecated use style.background_color */
   background_color?: string;
   hide_unavailable?: boolean;
   icon?: string;
