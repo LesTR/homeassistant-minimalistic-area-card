@@ -292,17 +292,18 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
     const style = {};
     if (this.config.style) {
-      style['--ha-better-minimalistic-area-card-background-color'] = this._getOrDefault(
-        null,
-        this.config.style.background_color,
-        '',
-      );
-      style['--ha-better-minimalistic-area-card-color'] = this._getOrDefault(null, this.config.style.color, '');
-      style['--ha-better-minimalistic-area-card-shadow-color'] = this._getOrDefault(
-        null,
-        this.config.style.shadow_color,
-        '',
-      );
+      const background = this._getOrDefault(null, this.config.style.background_color, undefined);
+      if (background) {
+        style['--ha-better-minimalistic-area-card-background-color'] = background;
+      }
+      const color = this._getOrDefault(null, this.config.style.color, undefined);
+      if (color) {
+        style['--ha-better-minimalistic-area-card-color'] = color;
+      }
+      const shadow_color = this._getOrDefault(null, this.config.style.shadow_color, undefined);
+      if (shadow_color) {
+        style['--ha-better-minimalistic-area-card-shadow-color'] = shadow_color;
+      }
     }
 
     let imageUrl: string | undefined = undefined;
@@ -741,6 +742,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
       .box {
         background-color: var(--ha-better-minimalistic-area-card-background-color, transparent);
+        color: var(--ha-better-minimalistic-area-card-color, var(--primary-text-color, black));
         display: flex;
         flex-flow: column nowrap;
         justify-content: flex-start;
@@ -750,7 +752,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
         padding: 0;
         font-size: 14px;
-        color: var(--ha-better-minimalistic-area-card-color, var(--primary-text-color, black));
         border-radius: var(--ha-card-border-radius, 12px);
       }
       .box .card-header {
@@ -826,7 +827,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         margin-bottom: -8px;
       }
       .box ha-icon-button state-badge {
-        color: var(--ha-better-minimalistic-area-card-color, var(--ha-picture-icon-button-color, #a9a9a9));
+        color: var(--ha-better-minimalistic-area-card-color, var(--primary-text-color, #a9a9a9));
         line-height: 0px;
       }
 
