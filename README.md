@@ -134,7 +134,7 @@ user : CurrentUser - structure represents the currently logged user
 - `--ha-better-minimalistic-area-card-color` - configure color for text, sensors, buttons and state values
 - `--ha-better-minimalistic-area-card-sensors-color` - configure color for sensors and state values in the sensor area
 - `--ha-better-minimalistic-area-card-buttons-color` - configure color for buttons and state values in the button area
-- `--ha-better-minimalistic-area-card-shadow-color'` - configure color of shadow (when enabled)
+- `--ha-better-minimalistic-area-card-shadow-color` - configure color of shadow (when enabled)
 
 [license-shield]: https://img.shields.io/github/license/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
