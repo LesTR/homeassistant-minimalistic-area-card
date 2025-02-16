@@ -292,17 +292,41 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
     const style = {};
     if (this.config.style) {
-      const background = this._getOrDefault(null, this.config.style.background_color, undefined);
-      if (background) {
-        style['--ha-better-minimalistic-area-card-background-color'] = background;
+      if (this.config.style.background_color) {
+        style['--ha-better-minimalistic-area-card-background-color'] = this._getOrDefault(
+          null,
+          this.config.style.background_color,
+          undefined,
+        );
       }
-      const color = this._getOrDefault(null, this.config.style.color, undefined);
-      if (color) {
-        style['--ha-better-minimalistic-area-card-color'] = color;
+      if (this.config.style.color) {
+        style['--ha-better-minimalistic-area-card-color'] = this._getOrDefault(
+          null,
+          this.config.style.color,
+          undefined,
+        );
       }
-      const shadow_color = this._getOrDefault(null, this.config.style.shadow_color, undefined);
-      if (shadow_color) {
-        style['--ha-better-minimalistic-area-card-shadow-color'] = shadow_color;
+      if (this.config.style.sensors_color) {
+        style['--ha-better-minimalistic-area-card-sensors-color'] = this._getOrDefault(
+          null,
+          this.config.style.sensors_color,
+          undefined,
+        );
+      }
+      if (this.config.style.buttons_color) {
+        style['--ha-better-minimalistic-area-card-buttons-color'] = this._getOrDefault(
+          null,
+          this.config.style.buttons_color,
+          undefined,
+        );
+      }
+
+      if (this.config.style.shadow_color) {
+        style['--ha-better-minimalistic-area-card-shadow-color'] = this._getOrDefault(
+          null,
+          this.config.style.shadow_color,
+          undefined,
+        );
       }
     }
 
@@ -754,6 +778,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         font-size: 14px;
         border-radius: var(--ha-card-border-radius, 12px);
       }
+
       .box .card-header {
         padding: 10px 15px;
         font-weight: bold;
@@ -765,6 +790,10 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         margin-top: -8px;
         margin-bottom: -8px;
         min-height: var(--minimalistic-area-card-sensors-min-height, 10px);
+        color: var(
+          --ha-better-minimalistic-area-card-sensors-color,
+          var(--ha-better-minimalistic-area-card-color, var(--primary-text-color, black))
+        );
         margin-left: 5px;
         margin-right: 5px;
         font-size: 0.9em;
@@ -783,6 +812,10 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
       .box .buttons {
         display: block;
+        color: var(
+          --ha-better-minimalistic-area-card-buttons-color,
+          var(--ha-better-minimalistic-area-card-color, var(--primary-text-color, black))
+        );
         padding-top: 10px;
         padding-bottom: 10px;
         min-height: 10px;
@@ -826,11 +859,19 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         vertical-align: middle;
         margin-bottom: -8px;
       }
-      .box ha-icon-button state-badge {
-        color: var(--ha-better-minimalistic-area-card-color, var(--primary-text-color, #a9a9a9));
+      .box .sensors ha-icon-button state-badge {
+        color: var(
+          --ha-better-minimalistic-area-card-sensors-color,
+          var(--ha-better-minimalistic-area-card-color, var(--secondary-text-color, #a9a9a9))
+        );
         line-height: 0px;
       }
-
+      .box .buttons ha-icon-button state-badge {
+        color: var(
+          --ha-better-minimalistic-area-card-buttons-color,
+          var(--ha-better-minimalistic-area-card-color, var(--secondary-text-color, #a9a9a9))
+        );
+      }
       .shadow {
         text-shadow: 1px 1px 2px var(--ha-better-minimalistic-area-card-shadow-color, gray);
       }

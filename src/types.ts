@@ -56,6 +56,8 @@ export interface StyleOptions {
   color?: string;
   background_color?: string;
   shadow_color?: string;
+  sensors_color?: string;
+  buttons_color?: string;
 }
 
 export interface LovelaceCardGridOptions {
