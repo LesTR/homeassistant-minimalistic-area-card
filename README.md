@@ -37,6 +37,8 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
   darken_image: true # reduce brightness of the background image to constrast with entities
   style:
     color: red # Override the color for text and icons (optional)
+    sensors_color: blue #Override the color for sensors (optional)
+    buttons_color: blue #Override the color for sensors (optional)
     background_color: yellow # a color name, rgb hex or rgba function when an image is not provided (optional)
     shadow_color: grey # a color name, rgb hex or rgba function for shadow when enabled
   align:
@@ -126,6 +128,13 @@ hass : HomeAssistant - homeassistant object
 state : any - state value of given entity or null
 user : CurrentUser - structure represents the currently logged user
 ```
+
+### CSS variables
+
+- `--ha-better-minimalistic-area-card-color` - configure color for text, sensors, buttons and state values
+- `--ha-better-minimalistic-area-card-sensors-color` - configure color for sensors and state values in the sensor area
+- `--ha-better-minimalistic-area-card-buttons-color` - configure color for buttons and state values in the button area
+- `--ha-better-minimalistic-area-card-shadow-color'` - configure color of shadow (when enabled)
 
 [license-shield]: https://img.shields.io/github/license/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
