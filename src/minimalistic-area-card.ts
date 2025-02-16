@@ -789,6 +789,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       .box .sensors {
         margin-top: -8px;
         margin-bottom: -8px;
+        vertical-align: middle;
         min-height: var(--minimalistic-area-card-sensors-min-height, 10px);
         color: var(
           --ha-better-minimalistic-area-card-sensors-color,
@@ -802,7 +803,10 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       }
 
       .box .card-header .title-entities {
-        min-height: var(--minimalistic-area-card-sensors-min-height, 10px);
+        color: var(
+          --ha-better-minimalistic-area-card-buttons-color,
+          var(--ha-better-minimalistic-area-card-color, var(--primary-text-color, black))
+        );
         padding: 0px;
         margin-top: -10px;
         margin-right: -20px;
@@ -859,19 +863,29 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         vertical-align: middle;
         margin-bottom: -8px;
       }
-      .box .sensors ha-icon-button state-badge {
+      .box .sensors ha-icon-button,
+      .box .sensors state-badge {
         color: var(
           --ha-better-minimalistic-area-card-sensors-color,
           var(--ha-better-minimalistic-area-card-color, var(--secondary-text-color, #a9a9a9))
         );
         line-height: 0px;
       }
-      .box .buttons ha-icon-button state-badge {
+      .box .buttons ha-icon-button,
+      .box .buttons state-badge {
         color: var(
           --ha-better-minimalistic-area-card-buttons-color,
           var(--ha-better-minimalistic-area-card-color, var(--secondary-text-color, #a9a9a9))
         );
       }
+      .box .title-entities ha-icon-button,
+      .box .title-entities state-badge {
+        color: var(
+          --ha-better-minimalistic-area-card-buttons-color,
+          var(--ha-better-minimalistic-area-card-color, var(--secondary-text-color, #a9a9a9))
+        );
+      }
+
       .shadow {
         text-shadow: 1px 1px 2px var(--ha-better-minimalistic-area-card-shadow-color, gray);
       }
