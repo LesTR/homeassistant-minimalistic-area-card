@@ -38,7 +38,7 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
   style:
     color: red # Override the color for text and icons (optional)
     sensors_color: blue #Override the color for sensors (optional)
-    buttons_color: blue #Override the color for sensors (optional)
+    buttons_color: blue #Override the color for buttons (optional)
     background_color: yellow # a color name, rgb hex or rgba function when an image is not provided (optional)
     shadow_color: grey # a color name, rgb hex or rgba function for shadow when enabled
   align:
