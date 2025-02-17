@@ -1348,10 +1348,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@lit-labs/scoped-registry-mixin@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.npmjs.org/@lit-labs/scoped-registry-mixin/-/scoped-registry-mixin-1.0.3.tgz"
-  integrity sha512-+DywdIJIIR30K0UGdWkn3iPlVvuSfmvo4qUlPTz1hEizksPD4Vl8TrwuXwi4HTIQ2XugYK3WXaWfWqqLEzbrxg==
+"@lit-labs/scoped-registry-mixin@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@lit-labs/scoped-registry-mixin/-/scoped-registry-mixin-1.0.4.tgz#6fac7ce2a46762c05fae70fdb335861363a585a2"
+  integrity sha512-gYeotwRwluD7RsFgU0eP48WgBMg6fIF5RXzbrjs/gwsPiJiFtal90s+x/LHIHqQ2VkubsyP+m+QAfgmOnsNhUg==
   dependencies:
     "@lit/reactive-element" "^1.0.0 || ^2.0.0"
     lit "^2.0.0 || ^3.0.0"
