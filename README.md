@@ -12,7 +12,7 @@ This is a fork of [junalmeida/homeassistant-minimalistic-area-card](https://gith
 
 ## Migration from the original card
 
-- install this one from HACS - NOT YET - see [issue-128](https://github.com/LesTR/homeassistant-minimalistic-area-card/issues/128) for details.
+- install this one from HACS - NOT YET - see [issue-128](https://github.com/LesTR/homeassistant-minimalistic-area-card/issues/128) for details. [Here](https://youtu.be/Y6YVQL0YHUw?t=57) is a video describing how to use this card. Just check the current options/settings.
 - replace type from `custom:minimalistic-area-card` by `custom:better-minimalistic-area-card`.
 
 ## Options
