@@ -425,7 +425,11 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     const domain = computeDomain(entityId);
 
     const dialog =
-      this._getOrDefault(entityId, entityConf.force_dialog, false) || DOMAINS_TOGGLE.indexOf(domain) === -1;
+      this._getOrDefault(
+        entityId,
+        entityConf.force_dialog,
+        this._getOrDefault(entityId, this.config.force_dialog, false),
+      ) || DOMAINS_TOGGLE.indexOf(domain) === -1;
 
     let show_state = true;
     if (entityConf.show_state === undefined) {

@@ -35,6 +35,7 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
   state_color: true # enable or disable HA colors for all entities
   shadow: true # enable a drop shadow on entity icons to contrast with the background
   darken_image: true # reduce brightness of the background image to constrast with entities
+  force_dialog: false # the default value for force_dialog on entities (optinal). Default: false
   style:
     color: red # Override the color for text and icons (optional)
     sensors_color: blue #Override the color for sensors (optional)
