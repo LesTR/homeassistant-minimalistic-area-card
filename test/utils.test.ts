@@ -36,6 +36,7 @@ describe('Templates tests', () => {
 
   test('verify exposed params', () => {
     expect(evalTemplate(null, '${state}', hass)).toBe(null);
+    expect(evalTemplate(undefined, '${state}', hass)).toBe(null);
     expect(evalTemplate(null, '${hass}', hass)).toBe(hass);
     expect(evalTemplate(sensor, '${state}', hass)).toBe(hass.states[sensor].state);
   });

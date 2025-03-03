@@ -1,7 +1,15 @@
-import { EntityConfig } from '@dermotduffy/custom-card-helpers';
+import { EntityConfig, NumberFormat, TimeFormat } from '@dermotduffy/custom-card-helpers';
 import { MinimalisticAreaCard } from '../src/minimalistic-area-card.ts';
-import { Alignment, cardType, EntitySection, HomeAssistantExt, MinimalisticAreaCardConfig } from '../src/types';
-import { state } from 'lit/decorators';
+import {
+  Alignment,
+  cardType,
+  EntityRegistryDisplayEntry,
+  EntitySection,
+  ExtendedEntityConfig,
+  HomeAssistantExt,
+  MinimalisticAreaCardConfig,
+} from '../src/types';
+import { HassEntity } from 'home-assistant-js-websocket/dist/types';
 
 describe('Card test', () => {
   const card: MinimalisticAreaCard = new MinimalisticAreaCard();
@@ -183,5 +191,56 @@ describe('Vefify entities', () => {
     expect(card['_entitiesTemplated']).toEqual(
       expect.arrayContaining([{ entity: entity, section: EntitySection.auto }]),
     );
+  });
+});
+
+describe('Vefify computeStateValue', () => {
+  test.each([
+    { state: { state: 8 }, conf: {}, entity: null, expected: '8' },
+    { state: { state: 8, attributes: { unit_of_measurement: 'xxx' } }, conf: {}, entity: null, expected: '8 xxx' },
+    {
+      state: { state: 8, attributes: { unit_of_measurement: 'xxx' } },
+      conf: { unit_of_measurement: 'yyy' },
+      entity: null,
+      expected: '8 yyy',
+    },
+    { state: { state: 8 }, conf: { unit_of_measurement: 'yyy' }, entity: null, expected: '8 yyy' },
+    { state: { state: 8 }, conf: { unit_of_measurement: '${"foo"}' }, entity: null, expected: '8 foo' },
+    { state: { state: 'unknown' }, conf: {}, entity: null, expected: null },
+    { state: { state: 'unknown', attributes: { unit_of_measurement: 'xxx' } }, conf: {}, entity: null, expected: null },
+    {
+      state: { state: 'unknown', attributes: { unit_of_measurement: 'xxx' } },
+      conf: { unit_of_measurement: 'xxx' },
+      entity: null,
+      expected: null,
+    },
+    {
+      state: { state: 'off' },
+      conf: { unit_of_measurement: 'xxx' },
+      entity: null,
+      expected: 'xxx',
+    },
+    {
+      state: { state: 'off' },
+      conf: {},
+      entity: null,
+      expected: '',
+    },
+  ])('returns correct value', (params) => {
+    const card: MinimalisticAreaCard = new MinimalisticAreaCard();
+    card.hass = {
+      locale: {
+        language: '',
+        number_format: NumberFormat.none,
+        time_format: TimeFormat.language,
+      },
+    } as unknown as HomeAssistantExt;
+
+    const value = card['computeStateValue'](
+      params.state as unknown as HassEntity,
+      params.conf as unknown as ExtendedEntityConfig,
+      params.entity as unknown as EntityRegistryDisplayEntry,
+    );
+    expect(value).toBe(params.expected);
   });
 });

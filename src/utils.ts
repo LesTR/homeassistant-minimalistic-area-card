@@ -2,7 +2,7 @@ import { html } from 'lit';
 import { cardType, EntityStateConfig, HomeAssistantExt } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function evalTemplate(entity: string | null, template: string, hass: HomeAssistantExt): any {
+export function evalTemplate(entity: string | null | undefined, template: string, hass: HomeAssistantExt): any {
   const trimmed = template.trim();
   if (!(trimmed.startsWith('${') && trimmed.endsWith('}'))) {
     return template;
@@ -16,7 +16,7 @@ export function evalTemplate(entity: string | null, template: string, hass: Home
     return new Function('hass', 'state', 'user', 'html', `'use strict'; ${func}`).call(
       null,
       hass,
-      entity != null ? hass.states[entity].state : null,
+      entity !== null && entity !== undefined ? hass.states[entity].state : null,
       hass.user,
       html,
     );

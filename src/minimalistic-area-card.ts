@@ -17,7 +17,7 @@ import {
 import { css, CSSResultGroup, html, LitElement, nothing, PropertyValues } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { styleMap, StyleInfo } from 'lit-html/directives/style-map.js';
+import { styleMap } from 'lit-html/directives/style-map.js';
 import { actionHandler } from './action-handler-directive';
 import { findEntities } from './find-entities';
 import {
@@ -465,8 +465,9 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     let color = this._getOrDefault(entityId, entityConf.color, '');
     let hide = this._getOrDefault(entityId, entityConf.hide, false);
 
+    const currentState = this.computeStateValue(stateObj, entityConf, entity);
+
     if (entityConf.state !== undefined && entityConf.state.length > 0) {
-      const currentState = this.computeStateValue(stateObj, entity);
       const stateConfig = filterStateConfigs(entityId, entityConf.state, currentState, this.hass);
       if (stateConfig) {
         icon = this._getOrDefault(entityId, stateConfig.icon, entityConf.icon);
@@ -509,7 +510,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
               <div class="state">
                 ${entityConf.attribute
                   ? html` ${entityConf.prefix} ${stateObj.attributes[entityConf.attribute]} ${entityConf.suffix} `
-                  : this.computeStateValue(stateObj, entity)}
+                  : currentState}
               </div>
             `
           : null}
@@ -521,19 +522,40 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     return !!stateObj.attributes.unit_of_measurement || !!stateObj.attributes.state_class;
   }
 
-  private computeStateValue(stateObj: HassEntity, entity?: EntityRegistryDisplayEntry) {
+  private computeStateValue(
+    stateObj: HassEntity,
+    entityConf: ExtendedEntityConfig,
+    entity?: EntityRegistryDisplayEntry,
+  ) {
+    if (!stateObj.attributes) {
+      stateObj.attributes = {};
+    }
+    const units = this._getOrDefault(
+      entity?.entity_id,
+      entityConf.unit_of_measurement,
+      this._getOrDefault(entity?.entity_id, stateObj.attributes.unit_of_measurement, ''),
+    );
+    const _fmt = function (str: string, units: string): string {
+      return `${str}${units ? ' ' + units : ''}`;
+    };
+
+    if (['unavailable', 'unknown', 'idle'].includes(String(stateObj.state).toLowerCase())) {
+      return null;
+    }
+    if (['off', 'on', 'true', 'false'].includes(String(stateObj.state).toLowerCase())) {
+      return units;
+    }
     if (this.isNumericState(stateObj)) {
       const value = Number(stateObj.state);
-      if (isNaN(value)) return null;
-      else {
+      if (isNaN(value)) {
+        return null;
+      } else {
         const opt = this.getNumberFormatOptions(stateObj, entity);
         const str = this.formatNumber(value, this.hass.locale, opt);
-        return `${str}${stateObj.attributes.unit_of_measurement ? ' ' + stateObj.attributes.unit_of_measurement : ''}`;
+        return _fmt(str, units);
       }
-    } else if (stateObj.state !== 'unavailable' && stateObj.state !== 'idle') {
-      return stateObj.state;
     } else {
-      return null;
+      return _fmt(stateObj.state, units);
     }
   }
 
@@ -659,8 +681,8 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     return false;
   }
 
-  private _getOrDefault(entity: string | null, value: any, defaultValue): any {
-    if (value == undefined) {
+  private _getOrDefault(entity: string | null | undefined, value: any, defaultValue): any {
+    if (value === undefined || value === null) {
       return defaultValue;
     }
     if (typeof value === 'string') {
