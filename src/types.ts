@@ -91,6 +91,7 @@ export type ExtendedEntityConfig = EntitiesCardEntityConfig & {
   color?: string;
   state?: EntityStateConfig[];
   section?: EntitySection;
+  unit_of_measurement?: string;
 };
 
 export type EntityStateConfig = {
