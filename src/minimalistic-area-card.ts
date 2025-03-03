@@ -797,7 +797,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         min-height: var(--minimalistic-area-card-sensors-min-height, 10px);
         color: var(
           --ha-better-minimalistic-area-card-sensors-color,
-          var(--ha-better-minimalistic-area-card-color, var(--primary-text-color, black))
+          var(--ha-better-minimalistic-area-card-color, var(--secondary-text-color, black))
         );
         margin-left: 5px;
         margin-right: 5px;
@@ -809,7 +809,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       .box .card-header .title-entities {
         color: var(
           --ha-better-minimalistic-area-card-buttons-color,
-          var(--ha-better-minimalistic-area-card-color, var(--primary-text-color, black))
+          var(--ha-better-minimalistic-area-card-color, var(--secondary-text-color, black))
         );
         padding: 0px;
         margin-top: -10px;
@@ -822,7 +822,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         display: block;
         color: var(
           --ha-better-minimalistic-area-card-buttons-color,
-          var(--ha-better-minimalistic-area-card-color, var(--primary-text-color, black))
+          var(--ha-better-minimalistic-area-card-color, var(--secondary-text-color, black))
         );
         padding-top: 10px;
         padding-bottom: 10px;
