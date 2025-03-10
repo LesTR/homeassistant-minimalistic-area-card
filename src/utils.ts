@@ -13,12 +13,13 @@ export function evalTemplate(entity: string | null | undefined, template: string
   }
 
   try {
-    return new Function('hass', 'state', 'user', 'html', `'use strict'; ${func}`).call(
+    return new Function('hass', 'state', 'user', 'html', 'helpers', `'use strict'; ${func}`).call(
       null,
       hass,
       entity !== null && entity !== undefined ? hass.states[entity].state : null,
       hass.user,
       html,
+      getTemplateHelpers(entity, hass),
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
@@ -70,4 +71,81 @@ export function filterStateConfigs(
 
 export function deprecatedWarning(message): void {
   console.warn('[DEPRECATED][%s] %s', cardType, message);
+}
+
+function getTemplateHelpers(entityId: string | null | undefined, hass: HomeAssistantExt): object {
+  const unknownValue = 'unknown';
+  const unavailableValue = 'unavailable';
+  const states = (entity: string): string => {
+    if (entity in hass.states) {
+      if ('state' in hass.states[entity]) {
+        return hass.states[entity].state;
+      }
+      return unavailableValue;
+    }
+    return unknownValue;
+  };
+
+  const has_value = (entity: string): boolean => {
+    return ![unknownValue, unavailableValue].includes(states(entity));
+  };
+
+  return {
+    states: (entity: string): string => {
+      return states(entity);
+    },
+    state_attr: (entity: string, attr: string | null): string | null => {
+      if (!attr && entityId) {
+        attr = entity;
+        entity = entityId;
+      }
+      if (attr && has_value(entity) && attr in hass.states[entity].attributes) {
+        return hass.states[entity].attributes[attr];
+      }
+      return null;
+    },
+    is_state: (entity: string | Array<string>, value: string | Array<string> | null): boolean => {
+      if (!value && entityId) {
+        value = entity;
+        entity = entityId;
+      }
+      if (typeof entity === 'string') {
+        const state = states(entity);
+        if (Array.isArray(value)) {
+          return value.includes(state);
+        }
+        return value == state;
+      }
+      return false;
+    },
+    is_state_attr: (
+      entity: string,
+      attr: string | Array<string> | null,
+      value: string | Array<string> | null,
+    ): boolean => {
+      if (!value && entityId) {
+        value = attr;
+        attr = entity;
+        entity = entityId;
+      }
+      if (typeof attr == 'string') {
+        if (attr in hass.states[entity]?.attributes) {
+          if (Array.isArray(value)) {
+            return value.includes(hass.states[entity].attributes[attr]);
+          }
+          return value == hass.states[entity].attributes[attr];
+        }
+      }
+      return false;
+    },
+    has_value: (entity: string | null): boolean => {
+      if (!entity && entityId) {
+        entity = entityId;
+      }
+      if (entity) {
+        return has_value(entity);
+      }
+      return false;
+    },
+  };
 }

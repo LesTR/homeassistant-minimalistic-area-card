@@ -129,7 +129,20 @@ entities:
 hass : HomeAssistant - homeassistant object
 state : any - state value of given entity or null
 user : CurrentUser - structure represents the currently logged user
+helpers: object - functions exposed to be used in the templates - see bellow
 ```
+
+### Helpers
+
+Templates supports a cople of function which can be used in templates. For concreate examples, please see `test/utils.test.ts`.
+
+| Helper                | Example                                                     | Description                                                                                                                                                                                                                                                                                                        |
+| --------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| helpers.states        | `${helpers.states('binary_sensor.night')}`                  | Returns the state string (not the state object) of the given entity, `unknown` if it doesn’t exist, and `unavailable` if the object exists but is not available.                                                                                                                                                   |
+| helpers.state_attr    | `${helpers.state_attr('switch.light','another_attribute')}` | will return the value of the attribute or `null` if it doesn’t exist.                                                                                                                                                                                                                                              |
+| helpers.is_state      | `${helpers.is_state('switch.light','off')}"`                | compares an entity’s state with a specified state or list of states and returns True or False. is_state('device_tracker.paulus', 'home') will test if the given entity is the specified state. is_state('device_tracker.paulus', ['home', 'work']) will test if the given entity is any of the states in the list. |
+| helpers.is_state_attr | `${helpers.is_state_attr('some_attribute',['10','20'])}"`   | will test if the given entity attribute is the specified state or in the list of given values                                                                                                                                                                                                                      |
+| helpers.has_value     | `${helpers.has_value('switch.light')}"`                     | will test if the given entity is not unknown or unavailable.                                                                                                                                                                                                                                                       |
 
 ### CSS variables
 
