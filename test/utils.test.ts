@@ -11,7 +11,17 @@ describe('Templates tests', () => {
     states: {
       'binary_sensor.night': {
         state: 'off',
+        attributes: {
+          some_attribute: '10',
+        },
       },
+      'switch.light': {
+        state: 'on',
+        attributes: {
+          another_attribute: 20,
+        },
+      },
+      'sensor.unavalaible': {},
     },
   } as unknown as HomeAssistantExt;
 
@@ -27,6 +37,39 @@ describe('Templates tests', () => {
     { template: "${state == 'off'}", expected: true },
     { template: "${user.name == 'test user'}", expected: true },
   ])('evalTemplate "%s"', ({ template, expected }) => {
+    expect(evalTemplate(sensor, template, hass)).toBe(expected);
+  });
+
+  test.each([
+    { template: "${helpers.states('binary_sensor.night')}", expected: 'off' },
+    { template: "${helpers.states('sensor.non_exists')}", expected: 'unknown' },
+    { template: "${helpers.states('sensor.unavalaible')}", expected: 'unavailable' },
+    { template: "${helpers.state_attr('some_attribute')}", expected: '10' },
+    { template: "${helpers.state_attr('non_existed_attribute')}", expected: null },
+    { template: "${helpers.state_attr('switch.light','another_attribute')}", expected: 20 },
+    { template: "${helpers.state_attr('sensor.non_exists','another_attribute')}", expected: null },
+    { template: "${helpers.is_state('off')}", expected: true },
+    { template: "${helpers.is_state('on')}", expected: false },
+    { template: "${helpers.is_state(['on','off'])}", expected: true },
+    { template: "${helpers.is_state(['off','off'])}", expected: true },
+    { template: "${helpers.is_state('switch.light','off')}", expected: false },
+    { template: "${helpers.is_state('switch.light','on')}", expected: true },
+    { template: "${helpers.is_state('switch.light',['on','off'])}", expected: true },
+    { template: "${helpers.is_state('switch.light',['off','off'])}", expected: false },
+    { template: "${helpers.is_state_attr('some_attribute','10')}", expected: true },
+    { template: "${helpers.is_state_attr('some_attribute',['10','20'])}", expected: true },
+    { template: "${helpers.is_state_attr('some_attribute','100')}", expected: false },
+    { template: "${helpers.is_state_attr('some_attribute',['100','200'])}", expected: false },
+    { template: "${helpers.is_state_attr('non_existed_attribute','100')}", expected: false },
+    { template: "${helpers.is_state_attr('switch.light','another_attribute',20)}", expected: true },
+    { template: "${helpers.is_state_attr('switch.light','another_attribute',[20,100])}", expected: true },
+    { template: "${helpers.is_state_attr('switch.light','another_attribute',200)}", expected: false },
+    { template: "${helpers.is_state_attr('switch.light','another_attribute',[200,300])}", expected: false },
+    { template: "${helpers.is_state_attr('switch.light','non_existed_attribute','100')}", expected: false },
+    { template: '${helpers.has_value()}', expected: true },
+    { template: "${helpers.has_value('switch.light')}", expected: true },
+    { template: "${helpers.has_value('sensor.unavalaible')}", expected: false },
+  ])('eval helpers "%s"', ({ template, expected }) => {
     expect(evalTemplate(sensor, template, hass)).toBe(expected);
   });
 
