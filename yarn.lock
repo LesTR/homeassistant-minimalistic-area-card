@@ -1444,12 +1444,12 @@
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.0.0"
 
-"@material/web@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@material/web/-/web-2.2.0.tgz#b98d57fc863301fe6c0036cc6f04869386067e08"
-  integrity sha512-k1Pi7f04qDRkHfIEdcnL++udN+x5Oq34R47n0Fk7Xo49uz9aKb6ZkO42jC6uvMH0ahOiFDktX9txHgYMDvNa+A==
+"@material/web@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@material/web/-/web-2.3.0.tgz#d0dda48159d148b1a0982b10c2e8b48940da81fe"
+  integrity sha512-r7ccZHthMk5tM05goPJ965hQ99ptMyZt7i8Xi8+RmEqK3ZXaMtjx+s4p+9OVX+vgOS3zpop+g1yGYXtOOlrwUg==
   dependencies:
-    lit "^2.7.4 || ^3.0.0"
+    lit "^2.8.0 || ^3.0.0"
     tslib "^2.4.0"
 
 "@nodelib/fs.scandir@2.1.5":
@@ -4250,7 +4250,7 @@ lit-html@^3.2.1:
   dependencies:
     "@types/trusted-types" "^2.0.2"
 
-"lit@^2.0.0 || ^3.0.0", "lit@^2.7.4 || ^3.0.0", lit@^3.2.1:
+"lit@^2.0.0 || ^3.0.0", "lit@^2.8.0 || ^3.0.0", lit@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/lit/-/lit-3.2.1.tgz#d6dd15eac20db3a098e81e2c85f70a751ff55592"
   integrity sha512-1BBa1E/z0O9ye5fZprPtdqnc0BFzxIxTTOO/tQFmyC/hj1O3jL4TfmLBw0WEwjAokdLwpclkvGgDJwTIh0/22w==
