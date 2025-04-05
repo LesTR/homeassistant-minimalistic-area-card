@@ -1,5 +1,5 @@
-import { EntityStateConfig, HomeAssistantExt } from '../src/types';
-import { evalTemplate, filterStateConfigs } from '../src/utils';
+import { cssCardVariablesPrefix, EntityStateConfig, HomeAssistantExt, StyleOptions } from '../src/types';
+import { buildCssVariables, evalTemplate, filterStateConfigs, getOrDefault } from '../src/utils';
 
 describe('Templates tests', () => {
   const sensor = 'binary_sensor.night';
@@ -174,5 +174,68 @@ describe('Templates tests', () => {
     } else {
       expect(c).toBeUndefined();
     }
+  });
+
+  test.each([
+    { input: 'false', entityId: null, defaultValue: null, expected: 'false' },
+    { input: null, entityId: null, defaultValue: null, expected: null },
+    { input: null, entityId: null, defaultValue: 8, expected: 8 },
+    { input: undefined, entityId: null, defaultValue: null, expected: null },
+    { input: undefined, entityId: null, defaultValue: 8, expected: 8 },
+    { input: '${undefined}', entityId: null, defaultValue: false, expected: false },
+    { input: '${null}', entityId: null, defaultValue: false, expected: false },
+    { input: '${state}', entityId: 'binary_sensor.night', defaultValue: false, expected: 'off' },
+  ])('getOrDefault input "%s"', ({ input, entityId, defaultValue, expected }) => {
+    expect(getOrDefault(entityId, input, hass, defaultValue)).toBe(expected);
+  });
+});
+
+describe('Verify CSS variables', () => {
+  const convert = (cfg: object): object => {
+    return buildCssVariables(cfg as StyleOptions, null, {} as HomeAssistantExt);
+  };
+  test.each([
+    { key: 'color', variableName: `${cssCardVariablesPrefix}color`, value: 'red' },
+    { key: 'background_color', variableName: `${cssCardVariablesPrefix}background-color`, value: 'red' },
+    { key: 'sensors_color', variableName: `${cssCardVariablesPrefix}sensors-color`, value: 'red' },
+    { key: 'sensors_icon_size', variableName: `${cssCardVariablesPrefix}sensors-icon-size`, value: '16px' },
+    { key: 'sensors_button_size', variableName: `${cssCardVariablesPrefix}sensors-button-size`, value: '16px' },
+    { key: 'buttons_color', variableName: `${cssCardVariablesPrefix}buttons-color`, value: 'red' },
+  ])('convert to variable "%s"', ({ key, variableName, value }) => {
+    const cfg = {};
+    cfg[key] = value;
+    const result = convert(cfg);
+    expect(Object.keys(result).includes(variableName)).toBe(true);
+    expect(result[variableName]).toBe(value);
+    expect(Object.keys(result).length).toBe(1);
+  });
+
+  test('convert all settings to variables', () => {
+    const cfg = {
+      color: 'red',
+      background_color: 'black',
+      shadow_color: 'gray',
+      sensors_color: 'blue',
+      sensors_icon_size: '10px',
+      sensors_button_size: '20px',
+      buttons_color: 'yellow',
+    } as StyleOptions;
+    const result = convert(cfg);
+    expect(Object.keys(result).length).toBe(Object.keys(cfg).length);
+
+    Object.keys(cfg).forEach((key) => {
+      const variableName = `${cssCardVariablesPrefix}${key.replace(/[_]/gi, '-')}`;
+      expect(Object.keys(result).includes(variableName)).toBe(true);
+      expect(result[variableName]).toBe(cfg[key]);
+    });
+  });
+
+  test('Empty settings returns empty object', () => {
+    expect(convert({})).toStrictEqual({});
+  });
+
+  test('Verify template evaluation', () => {
+    const result = convert({ color: "${return 'red';}" });
+    expect(result[`${cssCardVariablesPrefix}color`]).toBe('red');
   });
 });

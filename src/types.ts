@@ -15,6 +15,9 @@ declare global {
     'hui-error-card': LovelaceCard;
   }
 }
+
+export const cssCardVariablesPrefix = '--ha-better-minimalistic-area-card-';
+
 export enum Alignment {
   left = 'left',
   right = 'right',
@@ -57,6 +60,8 @@ export interface StyleOptions {
   background_color?: string;
   shadow_color?: string;
   sensors_color?: string;
+  sensors_icon_size?: string;
+  sensors_button_size?: string;
   buttons_color?: string;
 }
 

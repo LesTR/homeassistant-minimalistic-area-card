@@ -1,5 +1,6 @@
 import { html } from 'lit';
-import { cardType, EntityStateConfig, HomeAssistantExt } from './types';
+import { cardType, cssCardVariablesPrefix, EntityStateConfig, HomeAssistantExt, StyleOptions } from './types';
+import { styleMap } from 'lit-html/directives/style-map.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function evalTemplate(entity: string | null | undefined, template: string, hass: HomeAssistantExt): any {
@@ -148,4 +149,54 @@ function getTemplateHelpers(entityId: string | null | undefined, hass: HomeAssis
       return false;
     },
   };
+}
+
+export function getOrDefault(
+  entity: string | null | undefined,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any,
+  hass: HomeAssistantExt,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  defaultValue: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): any {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+  if (typeof value === 'string') {
+    const templated = evalTemplate(entity, value, hass);
+    if (templated === undefined || templated === null) {
+      return defaultValue;
+    } else {
+      return templated;
+    }
+  }
+  return value;
+}
+
+export function buildCssVariables(
+  cfg: StyleOptions,
+  entityId: string | null | undefined,
+  hass: HomeAssistantExt,
+): object {
+  const mapping = [
+    { key: 'color', ccs: `${cssCardVariablesPrefix}color` },
+    { key: 'background_color', ccs: `${cssCardVariablesPrefix}background-color` },
+    { key: 'sensors_color', ccs: `${cssCardVariablesPrefix}sensors-color` },
+    { key: 'sensors_icon_size', ccs: `${cssCardVariablesPrefix}sensors-icon-size` },
+    { key: 'sensors_button_size', ccs: `${cssCardVariablesPrefix}sensors-button-size` },
+    { key: 'buttons_color', ccs: `${cssCardVariablesPrefix}buttons-color` },
+    { key: 'shadow_color', ccs: `${cssCardVariablesPrefix}shadow-color` },
+  ];
+  const result = {};
+  mapping.forEach((m) => {
+    if (cfg[m.key]) {
+      const value = getOrDefault(entityId, cfg[m.key], hass, undefined);
+      if (value !== undefined) {
+        result[m.ccs] = value;
+      }
+    }
+  });
+
+  return result;
 }

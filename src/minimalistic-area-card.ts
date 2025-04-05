@@ -39,7 +39,7 @@ import {
 import { HassEntity } from 'home-assistant-js-websocket/dist';
 import { version as pkgVersion } from '../package.json';
 import { customElement } from 'lit/decorators.js';
-import { deprecatedWarning, evalTemplate, filterStateConfigs } from './utils';
+import { buildCssVariables, deprecatedWarning, filterStateConfigs, getOrDefault } from './utils';
 
 /* eslint no-console: 0 */
 console.info(
@@ -290,44 +290,9 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       return nothing;
     }
 
-    const style = {};
+    let style = {};
     if (this.config.style) {
-      if (this.config.style.background_color) {
-        style['--ha-better-minimalistic-area-card-background-color'] = this._getOrDefault(
-          null,
-          this.config.style.background_color,
-          undefined,
-        );
-      }
-      if (this.config.style.color) {
-        style['--ha-better-minimalistic-area-card-color'] = this._getOrDefault(
-          null,
-          this.config.style.color,
-          undefined,
-        );
-      }
-      if (this.config.style.sensors_color) {
-        style['--ha-better-minimalistic-area-card-sensors-color'] = this._getOrDefault(
-          null,
-          this.config.style.sensors_color,
-          undefined,
-        );
-      }
-      if (this.config.style.buttons_color) {
-        style['--ha-better-minimalistic-area-card-buttons-color'] = this._getOrDefault(
-          null,
-          this.config.style.buttons_color,
-          undefined,
-        );
-      }
-
-      if (this.config.style.shadow_color) {
-        style['--ha-better-minimalistic-area-card-shadow-color'] = this._getOrDefault(
-          null,
-          this.config.style.shadow_color,
-          undefined,
-        );
-      }
+      style = buildCssVariables(this.config.style, null, this.hass);
     }
 
     let imageUrl: string | undefined = undefined;
@@ -681,14 +646,8 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     return false;
   }
 
-  private _getOrDefault(entity: string | null | undefined, value: any, defaultValue): any {
-    if (value === undefined || value === null) {
-      return defaultValue;
-    }
-    if (typeof value === 'string') {
-      return evalTemplate(entity, value, this.hass);
-    }
-    return value;
+  private _getOrDefault(entity: string | null | undefined, value: any, defaultValue: any): any {
+    return getOrDefault(entity, value, this.hass, defaultValue);
   }
 
   public static findAreaEntities(hass: HomeAssistantExt, area_id: string): Array<string> {
