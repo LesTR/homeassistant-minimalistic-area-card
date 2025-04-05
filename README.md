@@ -39,6 +39,8 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
   style:
     color: red # Override the color for text and icons (optional)
     sensors_color: blue #Override the color for sensors (optional)
+    sensors_icon_size: 18px #Override size for the icons in sensors area (optional, default 18px)
+    sensors_button_size: 32px #Override the clickable area on icons in sensors area (optional, default 32px)
     buttons_color: blue #Override the color for buttons (optional)
     background_color: yellow # a color name, rgb hex or rgba function when an image is not provided (optional)
     shadow_color: grey # a color name, rgb hex or rgba function for shadow when enabled
@@ -148,6 +150,8 @@ Templates supports a cople of function which can be used in templates. For concr
 
 - `--ha-better-minimalistic-area-card-color` - configure color for text, sensors, buttons and state values
 - `--ha-better-minimalistic-area-card-sensors-color` - configure color for sensors and state values in the sensor area
+- `--ha-better-minimalistic-area-card-sensors-icon-size` - configure size for the icons in the sensor area (default 18px)
+- `--ha-better-minimalistic-area-card-sensors-button-size` - configure clickable size on icons in the sensor area (default 32px)
 - `--ha-better-minimalistic-area-card-buttons-color` - configure color for buttons and state values in the button area
 - `--ha-better-minimalistic-area-card-shadow-color` - configure color of shadow (when enabled)
 
