@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { cardType, cssCardVariablesPrefix, EntityStateConfig, HomeAssistantExt, StyleOptions } from './types';
-import { styleMap } from 'lit-html/directives/style-map.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function evalTemplate(entity: string | null | undefined, template: string, hass: HomeAssistantExt): any {
