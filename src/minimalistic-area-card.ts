@@ -49,7 +49,7 @@ console.info(
 );
 
 const STATE_NOT_RUNNING = 'NOT_RUNNING';
-const SENSORS = ['sensor', 'binary_sensor'];
+const SENSORS = ['sensor', 'binary_sensor', 'plant'];
 const DOMAINS_TOGGLE = ['fan', 'input_boolean', 'light', 'switch', 'group', 'automation', 'humidifier'];
 
 const createEntityNotFoundWarning = (hass, entityId) =>
@@ -91,6 +91,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     'siren',
     'scene',
     'todo',
+    'plant',
   ];
   private _templatedEntityNameRegexp = RegExp(`["']((${this._domainsInTemplates.join('|')})[.][a-z_]+)["']`, 'gmsid');
   private configChanged = true;
