@@ -339,6 +339,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         <div
           class="${classMap({
             box: true,
+            pointer: hasAction(this.config.tap_action),
             shadow: this._getOrDefault(null, this.config.shadow, false),
           })}"
         >
@@ -763,6 +764,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         padding: 0;
         font-size: 14px;
         border-radius: var(--ha-card-border-radius, 12px);
+        z-index: -1;
       }
 
       .box .card-header {
@@ -797,6 +799,10 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         margin-right: -20px;
         font-size: 0.9em;
         line-height: 13px;
+      }
+
+      .pointer {
+        cursor: pointer;
       }
 
       .box .buttons {
@@ -870,6 +876,10 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
 
       .shadow {
         text-shadow: 1px 1px 2px var(--ha-better-minimalistic-area-card-shadow-color, gray);
+      }
+      .box .state,
+      .box hui-warning-element {
+        cursor: default;
       }
 
       .shadow ha-icon-button,
