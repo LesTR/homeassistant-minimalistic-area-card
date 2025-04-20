@@ -62,6 +62,8 @@ export interface StyleOptions {
   sensors_color?: string;
   sensors_icon_size?: string;
   sensors_button_size?: string;
+  buttons_icon_size?: string;
+  buttons_button_size?: string;
   buttons_color?: string;
 }
 

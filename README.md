@@ -42,6 +42,8 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
     sensors_icon_size: 18px #Override size for the icons in sensors area (optional, default 18px)
     sensors_button_size: 32px #Override the clickable area on icons in sensors area (optional, default 32px)
     buttons_color: blue #Override the color for buttons (optional)
+    buttons_icon_size: 24px #Override size for the icons in buttons area (optional, default 24px)
+    buttons_button_size: 48px #Override the clickable area on icons in buttons area (optional, default 48px)
     background_color: yellow # a color name, rgb hex or rgba function when an image is not provided (optional)
     shadow_color: grey # a color name, rgb hex or rgba function for shadow when enabled
   align:
@@ -149,10 +151,12 @@ Templates supports a cople of function which can be used in templates. For concr
 ### CSS variables
 
 - `--ha-better-minimalistic-area-card-color` - configure color for text, sensors, buttons and state values
-- `--ha-better-minimalistic-area-card-sensors-color` - configure color for sensors and state values in the sensor area
-- `--ha-better-minimalistic-area-card-sensors-icon-size` - configure size for the icons in the sensor area (default 18px)
-- `--ha-better-minimalistic-area-card-sensors-button-size` - configure clickable size on icons in the sensor area (default 32px)
-- `--ha-better-minimalistic-area-card-buttons-color` - configure color for buttons and state values in the button area
+- `--ha-better-minimalistic-area-card-sensors-color` - configure color for sensors and state values in the sensors area
+- `--ha-better-minimalistic-area-card-sensors-icon-size` - configure size for the icons in the sensors area (default 18px)
+- `--ha-better-minimalistic-area-card-sensors-button-size` - configure clickable size on icons in the sensors area (default 32px)
+- `--ha-better-minimalistic-area-card-buttons-icon-size` - configure size for the icons in the buttons area (default 24px)
+- `--ha-better-minimalistic-area-card-buttons-button-size` - configure clickable size on icons in the buttons area (default 48px)
+- `--ha-better-minimalistic-area-card-buttons-color` - configure color for buttons and state values in the buttons area
 - `--ha-better-minimalistic-area-card-shadow-color` - configure color of shadow (when enabled)
 
 [license-shield]: https://img.shields.io/github/license/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
