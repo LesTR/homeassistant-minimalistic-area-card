@@ -200,6 +200,8 @@ describe('Verify CSS variables', () => {
     { key: 'sensors_color', variableName: `${cssCardVariablesPrefix}sensors-color`, value: 'red' },
     { key: 'sensors_icon_size', variableName: `${cssCardVariablesPrefix}sensors-icon-size`, value: '16px' },
     { key: 'sensors_button_size', variableName: `${cssCardVariablesPrefix}sensors-button-size`, value: '16px' },
+    { key: 'buttons_icon_size', variableName: `${cssCardVariablesPrefix}buttons-icon-size`, value: '24px' },
+    { key: 'buttons_button_size', variableName: `${cssCardVariablesPrefix}buttons-button-size`, value: '48px' },
     { key: 'buttons_color', variableName: `${cssCardVariablesPrefix}buttons-color`, value: 'red' },
   ])('convert to variable "%s"', ({ key, variableName, value }) => {
     const cfg = {};

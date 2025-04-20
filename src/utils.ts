@@ -184,6 +184,8 @@ export function buildCssVariables(
     { key: 'sensors_color', ccs: `${cssCardVariablesPrefix}sensors-color` },
     { key: 'sensors_icon_size', ccs: `${cssCardVariablesPrefix}sensors-icon-size` },
     { key: 'sensors_button_size', ccs: `${cssCardVariablesPrefix}sensors-button-size` },
+    { key: 'buttons_icon_size', ccs: `${cssCardVariablesPrefix}buttons-icon-size` },
+    { key: 'buttons_button_size', ccs: `${cssCardVariablesPrefix}buttons-button-size` },
     { key: 'buttons_color', ccs: `${cssCardVariablesPrefix}buttons-color` },
     { key: 'shadow_color', ccs: `${cssCardVariablesPrefix}shadow-color` },
   ];
