@@ -7,7 +7,7 @@ import {
   LovelaceCardEditor,
   EntitiesCardEntityConfig,
   STATES_OFF as STATES_OFF_HELPER,
-} from '@dermotduffy/custom-card-helpers/dist';
+} from '@dermotduffy/custom-card-helpers';
 import { name } from '../package.json';
 declare global {
   interface HTMLElementTagNameMap {
