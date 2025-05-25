@@ -2,12 +2,12 @@ import { noChange } from 'lit';
 import { AttributePart, directive, Directive, DirectiveParameters } from 'lit/directive.js';
 
 import { fireEvent } from '@dermotduffy/custom-card-helpers';
-import { ActionHandlerDetail, ActionHandlerOptions } from '@dermotduffy/custom-card-helpers/dist/types';
+import { ActionHandlerDetail, ActionHandlerOptions } from '@dermotduffy/custom-card-helpers';
 import { cardType } from './types';
 
 const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.maxTouchPoints > 0;
 
-interface ActionHandler extends HTMLElement {
+interface ActionHandlerInterface extends HTMLElement {
   holdTime: number;
   bind(element: Element, options): void;
 }
@@ -21,7 +21,7 @@ declare global {
   }
 }
 
-class ActionHandler extends HTMLElement implements ActionHandler {
+class ActionHandler extends HTMLElement implements ActionHandlerInterface {
   public holdTime = 500;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
