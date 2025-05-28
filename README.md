@@ -1,9 +1,8 @@
-[![hacs][hacs-badge]][hacs-url]
+# Better Minimalistic Area Card
+
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
-
-# Better Minimalistic Area Card
 
 A minimalistic area card to have a control panel of your house on your dashboard. This card will show numeric sensors with its value, and binary sensors with only the icon. Switches and lights will have their own button that you can tap/click to toggle, or tap/click and hold to see detailed information.
 
@@ -194,8 +193,6 @@ Templates supports a cople of function which can be used in templates. For concr
 
 <!-- Badges -->
 
-[hacs-url]: https://github.com/hacs/integration
-[hacs-badge]: https://img.shields.io/badge/hacs-default-orange.svg?style=flat-square
 [license-shield]: https://img.shields.io/github/license/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
 [releases]: https://github.com/lestr/homeassistant-minimalistic-area-card/releases
