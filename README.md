@@ -1,18 +1,50 @@
 # Better Minimalistic Area Card
 
 A minimalistic area card to have a control panel of your house on your dashboard. This card will show numeric sensors with its value, and binary sensors with only the icon. Switches and lights will have their own button that you can tap/click to toggle, or tap/click and hold to see detailed information.
-
+[![hacs][hacs-badge]][hacs-url]
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]](LICENSE.md)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 
 ![Sample preview](docs/sample.png)
 
+## Installation
+
+### HACS
+
+Mushroom is available in [HACS][hacs] (Home Assistant Community Store).
+
+Use this link to directly go to the repository in HACS
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=LesTR&repository=homeassistant-minimalistic-area-card)
+
+_or_
+
+1. Install HACS if you don't have it already
+2. Open HACS in Home Assistant
+3. Search for "Better Minimalistic Area Card"
+4. Click the download button. ⬇️
+
+### Manual
+
+1. Download `better-minimalistic-area-card.js` file from the [latest release][release-url].
+2. Put `better-minimalistic-area-card.js` file into your `config/www` folder.
+3. Add reference to `better-minimalistic-area-card.js` in Dashboard. There's two way to do that:
+
+   - **Using UI:** _Settings_ → _Dashboards_ → _More Options icon_ → _Resources_ → _Add Resource_ → Set _Url_ as `/local/better-minimalistic-area-card.js` → Set _Resource type_ as `JavaScript Module`.
+     **Note:** If you do not see the Resources menu, you will need to enable _Advanced Mode_ in your _User Profile_
+   - **Using YAML:** Add following code to `lovelace` section.
+
+     ```yaml
+     resources:
+       - url: /local/better-minimalistic-area-card.js
+         type: module
+     ```
+
 This is a fork of [junalmeida/homeassistant-minimalistic-area-card](https://github.com/junalmeida/homeassistant-minimalistic-area-card), and I would like to thank the original author. The reason for renaming can be found in [issue 128](https://github.com/LesTR/homeassistant-minimalistic-area-card/issues/128).
 
 ## Migration from the original card
 
-- install this one from HACS - NOT YET - see [issue-128](https://github.com/LesTR/homeassistant-minimalistic-area-card/issues/128) for details. [Here](https://youtu.be/Y6YVQL0YHUw?t=57) is a video describing how to use this card. Just check the current options/settings.
 - replace type from `custom:minimalistic-area-card` by `custom:better-minimalistic-area-card`.
 
 ## Options
@@ -159,6 +191,15 @@ Templates supports a cople of function which can be used in templates. For concr
 - `--ha-better-minimalistic-area-card-buttons-color` - configure color for buttons and state values in the buttons area
 - `--ha-better-minimalistic-area-card-shadow-color` - configure color of shadow (when enabled)
 
+<!-- Badges -->
+
+[hacs-url]: https://github.com/hacs/integration
+[hacs-badge]: https://img.shields.io/badge/hacs-default-orange.svg?style=flat-square
 [license-shield]: https://img.shields.io/github/license/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/lestr/homeassistant-minimalistic-area-card.svg?style=for-the-badge
 [releases]: https://github.com/lestr/homeassistant-minimalistic-area-card/releases
+
+<!-- References -->
+
+[hacs]: https://hacs.xyz
+[release-url]: https://github.com/LesTR/homeassistant-minimalistic-area-card/releases
