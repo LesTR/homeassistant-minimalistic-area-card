@@ -12,7 +12,7 @@ A minimalistic area card to have a control panel of your house on your dashboard
 
 ### HACS
 
-Mushroom is available in [HACS][hacs] (Home Assistant Community Store).
+Better Minimalistic Area Card is available in [HACS][hacs] (Home Assistant Community Store).
 
 Use this link to directly go to the repository in HACS
 
