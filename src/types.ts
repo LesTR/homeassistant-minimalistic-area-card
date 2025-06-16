@@ -99,6 +99,7 @@ export type ExtendedEntityConfig = EntitiesCardEntityConfig & {
   state?: EntityStateConfig[];
   section?: EntitySection;
   unit_of_measurement?: string;
+  hide_unavailable?: boolean;
 };
 
 export type EntityStateConfig = {
@@ -107,6 +108,7 @@ export type EntityStateConfig = {
   icon?: string;
   color?: string;
   hide?: boolean;
+  hide_unavailable?: boolean;
 };
 
 export interface EntityRegistryDisplayEntry {

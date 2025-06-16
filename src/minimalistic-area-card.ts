@@ -413,24 +413,14 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       ...entityConf,
     };
 
-    if ((!stateObj || stateObj.state === UNAVAILABLE) && !this.config.hide_unavailable) {
-      return html`
-        <div class="wrapper">
-          <hui-warning-element .label=${createEntityNotFoundWarning(this.hass, entityId)}></hui-warning-element>
-        </div>
-      `;
-    } else if ((!stateObj || stateObj.state === UNAVAILABLE) && this.config.hide_unavailable) {
-      return nothing;
-    }
-
-    const active = stateObj && stateObj.state && STATES_OFF.indexOf(stateObj.state.toString().toLowerCase()) === -1;
-    const title = `${stateObj.attributes?.friendly_name || entityId}: ${computeStateDisplay(this.hass?.localize, stateObj, this.hass?.locale)}`;
-
-    const isSensor = entityConf.section == EntitySection.sensors || SENSORS.indexOf(domain) !== -1;
-
     let icon = this._getOrDefault(entityId, entityConf.icon, '');
     let color = this._getOrDefault(entityId, entityConf.color, '');
     let hide = this._getOrDefault(entityId, entityConf.hide, false);
+    let hide_if_unavailable = this._getOrDefault(
+      entityId,
+      entityConf.hide_unavailable,
+      this._getOrDefault(entityId, this.config.hide_unavailable, false),
+    );
 
     const currentState = this.computeStateValue(stateObj, entityConf, entity);
 
@@ -440,11 +430,24 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         icon = this._getOrDefault(entityId, stateConfig.icon, entityConf.icon);
         color = this._getOrDefault(entityId, stateConfig.color, color);
         hide = this._getOrDefault(entityId, stateConfig.hide, hide);
+        hide_if_unavailable = this._getOrDefault(entityId, stateConfig.hide_unavailable, hide_if_unavailable);
       }
     }
-    if (hide) {
+
+    if ((!stateObj || stateObj.state === UNAVAILABLE) && !hide_if_unavailable) {
+      return html`
+        <div class="wrapper">
+          <hui-warning-element .label=${createEntityNotFoundWarning(this.hass, entityId)}></hui-warning-element>
+        </div>
+      `;
+    } else if (((!stateObj || stateObj.state === UNAVAILABLE) && hide_if_unavailable) || hide) {
       return nothing;
     }
+
+    const active = stateObj && stateObj.state && STATES_OFF.indexOf(stateObj.state.toString().toLowerCase()) === -1;
+    const title = `${stateObj.attributes?.friendly_name || entityId}: ${computeStateDisplay(this.hass?.localize, stateObj, this.hass?.locale)}`;
+
+    const isSensor = entityConf.section == EntitySection.sensors || SENSORS.indexOf(domain) !== -1;
 
     return html`
       <div class="wrapper ${entityConf.entity.replace('.', '_')}">
