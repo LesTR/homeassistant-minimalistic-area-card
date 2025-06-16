@@ -63,7 +63,7 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
   icon: mdi:sofa (optional) Override the area icon.
   show_area_icon: true # boolean (optional), default false. Show the are icon in the title. The top-level option icon can override the icon.
   shadow: true # Draws a drop shadow on icons (optional)
-  hide_unavailable: false # Hide unavailable entities (optional)
+  hide_unavailable: false # Hide unavailable entities (optional, default false)
   state_color: true # enable or disable HA colors for all entities
   shadow: true # enable a drop shadow on entity icons to contrast with the background
   darken_image: true # reduce brightness of the background image to constrast with entities
@@ -94,6 +94,7 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
       show_state: true #show/hide state for sensors (binary_sensors are hidden by default) (optional, default true)
       section: auto # define the section where to show given entity (optional), default 'auto', possible values: auto, sensors, buttons, title. Sensors means the first line, buttons the second one, title op.
       unit_of_measurement: "my unit" # overrides the units of entity. (optional, default empty). Useful when entity don't have attribute with units.
+      hide_unavailable: false #Hide unavailable entities (optional, default false)
     - entity: switch.fireplace_on_off
     - entity: cover.window_covering
       tap_action:
@@ -126,6 +127,7 @@ state: # array of values
     icon: mdi:my-icon" # entity icon used when state match
     color: color # color used when state match
     hide: false # Default false, conditionally hide the entity when state match given value
+    hide_unavailable: false #Hide unavailable entities (optional, default false)
 ```
 
 ### State operators
