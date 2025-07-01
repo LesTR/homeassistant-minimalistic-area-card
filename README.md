@@ -30,7 +30,6 @@ _or_
 1. Download `better-minimalistic-area-card.js` file from the [latest release][release-url].
 2. Put `better-minimalistic-area-card.js` file into your `config/www` folder.
 3. Add reference to `better-minimalistic-area-card.js` in Dashboard. There's two way to do that:
-
    - **Using UI:** _Settings_ → _Dashboards_ → _More Options icon_ → _Resources_ → _Add Resource_ → Set _Url_ as `/local/better-minimalistic-area-card.js` → Set _Resource type_ as `JavaScript Module`.
      **Note:** If you do not see the Resources menu, you will need to enable _Advanced Mode_ in your _User Profile_
    - **Using YAML:** Add following code to `lovelace` section.
