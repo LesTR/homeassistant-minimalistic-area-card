@@ -119,9 +119,6 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
           this.areaEntities = MinimalisticAreaCard.findAreaEntities(this.hass, area.area_id);
           if (!this.config.icon) {
             this.config.icon = area.icon;
-          } else {
-            // Backward compatibility
-            this.config.show_area_icon = true;
           }
         } else {
           this.area = undefined;
