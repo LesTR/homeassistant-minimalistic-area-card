@@ -117,12 +117,13 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         if (area) {
           this.area = area;
           this.areaEntities = MinimalisticAreaCard.findAreaEntities(this.hass, area.area_id);
-          if (!this.config.icon) {
-            this.config.icon = area.icon;
-          } else {
-            // Backward compatibility
-            this.config.show_area_icon = true;
-          }
+          // Set icon from the area (if exists) when missing in the config
+          this.config.icon = getOrDefault(
+            null,
+            this.config.icon,
+            this.hass,
+            getOrDefault(null, area.icon, this.hass, undefined),
+          );
         } else {
           this.area = undefined;
           this.areaEntities = undefined;
@@ -370,15 +371,15 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     `;
   }
 
-  private renderAreaIcon(areaConfig: MinimalisticAreaCardConfig) {
+  private renderAreaIcon(config: MinimalisticAreaCardConfig) {
     if (
-      this._getOrDefault(null, areaConfig.icon, '').trim().length == 0 ||
-      !this._getOrDefault(null, areaConfig.show_area_icon, false)
+      this._getOrDefault(null, config.icon, '').trim().length == 0 ||
+      !this._getOrDefault(null, config.show_area_icon, false)
     ) {
       return html``;
     }
 
-    return html` <ha-icon icon=${ifDefined(areaConfig.icon)}></ha-icon> `;
+    return html` <ha-icon icon=${ifDefined(config.icon)}></ha-icon> `;
   }
 
   private renderEntity(entityConf: ExtendedEntityConfig) {
