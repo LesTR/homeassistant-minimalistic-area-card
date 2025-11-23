@@ -1,9 +1,15 @@
 import { html } from 'lit-html';
 import { MinimalisticAreaCard } from '../src/minimalistic-area-card';
-import { HomeAssistantExt, MinimalisticAreaCardConfig } from '../src/types';
+import {
+  EntityRegistryDisplayEntry,
+  ExtendedEntityConfig,
+  HomeAssistantExt,
+  MinimalisticAreaCardConfig,
+} from '../src/types';
+
+const card: MinimalisticAreaCard = new MinimalisticAreaCard();
 
 describe('area card config tests', () => {
-  const card: MinimalisticAreaCard = new MinimalisticAreaCard();
   const hass: HomeAssistantExt = {
     connected: true,
     areas: {
@@ -132,4 +138,67 @@ describe('area card config tests', () => {
       }
     },
   );
+});
+
+describe('entities configuration', () => {
+  const hass: HomeAssistantExt = {
+    connected: true,
+    areas: {
+      my_first_area: {
+        area_id: 'my_first_area',
+        name: 'My First Area',
+      },
+      my_second_area: {
+        area_id: 'my_second_area',
+        name: 'My First Area',
+      },
+    },
+    devices: {},
+    entities: {
+      'binary_sensor.my_first_binary_sensor': {
+        area_id: 'my_first_area',
+        device_id: '',
+        entity_id: 'binary_sensor.my_first_binary_sensor',
+      },
+      'binary_sensor.my_second_binary_sensor': {
+        area_id: 'my_first_area',
+        device_id: '',
+        entity_id: 'binary_sensor.my_second_binary_sensor',
+      },
+      'sensor.hiden_sensor': {
+        area_id: 'my_first_area',
+        entity_id: 'sensor.hiden_sensor',
+        device_id: '',
+        hidden: true,
+      },
+      'sensor.another_sensor': {
+        area_id: '',
+        device_id: '',
+        entity_id: 'sensor.alnother_sensor',
+      },
+    },
+  } as unknown as HomeAssistantExt;
+
+  beforeEach(() => {
+    card.hass = hass;
+  });
+
+  test.each([
+    { area_id: 'my_first_area', expectedCountEntities: 2 },
+    { area_id: 'my_second_area', expectedCountEntities: 0 },
+    { area_id: 'not_existed_area', expectedCountEntities: 0 },
+  ])('Verify autodiscovered entities from area', ({ area_id, expectedCountEntities }) => {
+    const entities: ExtendedEntityConfig[] = MinimalisticAreaCard.findAreaEntities(hass, area_id);
+    expect(entities.length).toBe(expectedCountEntities);
+    if (expectedCountEntities > 0) {
+      entities.forEach((entity) => {
+        expect(entity).toHaveProperty('entity');
+        expect(Object.keys(hass.entities)).toContain(entity.entity);
+
+        const hassEntity = hass.entities[entity.entity];
+        expect(hassEntity.entity_id).toBe(entity.entity);
+        expect(hassEntity.area_id).toBe(area_id);
+      });
+    }
+  });
 });
