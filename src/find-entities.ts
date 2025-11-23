@@ -1,6 +1,6 @@
 import { computeDomain, HomeAssistant } from '@dermotduffy/custom-card-helpers';
 import { HassEntity } from 'home-assistant-js-websocket';
-import { HomeAssistantArea } from './types';
+import { ExtendedEntityConfig, HomeAssistantArea } from './types';
 
 const arrayFilter = (
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -37,19 +37,19 @@ const arrayFilter = (
 export const findEntities = (
   hass: HomeAssistant,
   maxEntities: number,
-  entities: string[],
-  entitiesFallback: string[],
+  entities: ExtendedEntityConfig[],
+  entitiesFallback: ExtendedEntityConfig[],
   includeDomains?: string[],
   entityFilter?: (stateObj: HassEntity) => boolean,
-): string[] => {
-  const conditions: Array<(value: string) => boolean> = [];
+): ExtendedEntityConfig[] => {
+  const conditions: Array<(value: ExtendedEntityConfig) => boolean> = [];
 
   if (includeDomains?.length) {
-    conditions.push((eid) => includeDomains.includes(computeDomain(eid)));
+    conditions.push((eid) => includeDomains.includes(computeDomain(eid.entity)));
   }
 
   if (entityFilter) {
-    conditions.push((eid) => hass.states[eid] && entityFilter(hass.states[eid]));
+    conditions.push((eid) => hass.states[eid.entity] && entityFilter(hass.states[eid.entity]));
   }
 
   const entityIds = arrayFilter(entities, conditions, maxEntities);

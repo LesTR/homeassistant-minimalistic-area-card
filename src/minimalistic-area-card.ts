@@ -67,7 +67,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
   hass!: HomeAssistantExt;
   config!: MinimalisticAreaCardConfig;
   private area?: HomeAssistantArea;
-  private areaEntities?: string[];
+  private areaEntities?: ExtendedEntityConfig[];
   private _domainsInTemplates = [
     'input_([^.]+)',
     '(binary_)?sensor',
@@ -656,7 +656,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     return getOrDefault(entity, value, this.hass, defaultValue);
   }
 
-  public static findAreaEntities(hass: HomeAssistantExt, area_id: string): Array<string> {
+  public static findAreaEntities(hass: HomeAssistantExt, area_id: string): ExtendedEntityConfig[] {
     const area = hass.areas && hass.areas[area_id];
     const areaEntities =
       hass.entities &&
@@ -664,18 +664,24 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       Object.keys(hass.entities)
         .filter(
           (e) =>
-            !hass.entities[e].disabled_by &&
             !hass.entities[e].hidden &&
             hass.entities[e].entity_category !== 'diagnostic' &&
             hass.entities[e].entity_category !== 'config' &&
             (hass.entities[e].area_id === area.area_id ||
               hass.devices[hass.entities[e].device_id || '']?.area_id === area.area_id),
         )
-        .map((x) => x);
-    return areaEntities;
+        .map((x) => MinimalisticAreaCard._mapEntityNameToEntityConfig(x));
+    return areaEntities || [];
   }
 
-  public static getStubConfig(hass: HomeAssistantExt, entities: string[], entitiesFallback: string[]) {
+  private static _mapEntityNameToEntityConfig(name: string): ExtendedEntityConfig {
+    return { entity: name } as ExtendedEntityConfig;
+  }
+
+  public static getStubConfig(hass: HomeAssistantExt, input_entities: string[], input_entitiesFallback: string[]) {
+    const entities = input_entities.map((x) => MinimalisticAreaCard._mapEntityNameToEntityConfig(x));
+    const entitiesFallback = input_entitiesFallback.map((x) => MinimalisticAreaCard._mapEntityNameToEntityConfig(x));
+
     const area = hass.areas && hass.areas[Object.keys(hass.areas)[0]];
     const areaEntities = MinimalisticAreaCard.findAreaEntities(hass, area.area_id);
 

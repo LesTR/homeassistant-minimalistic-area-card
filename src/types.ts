@@ -117,10 +117,13 @@ export interface EntityRegistryDisplayEntry {
   device_id?: string;
   area_id?: string;
   hidden?: boolean;
+  icon?: string;
   entity_category?: 'config' | 'diagnostic';
   translation_key?: string;
   platform?: string;
   display_precision?: number;
+  has_entity_name?: boolean;
+  labels?: Array<string>;
 }
 
 export const UNAVAILABLE = 'unavailable';
@@ -130,14 +133,7 @@ export const cardType = name;
 export type HomeAssistantExt = HomeAssistant & {
   areas: { [key: string]: HomeAssistantArea };
   entities: {
-    [key: string]: {
-      area_id?: string;
-      entity_id: string;
-      device_id?: string;
-      entity_category?: string;
-      disabled_by?: string;
-      hidden: boolean;
-    };
+    [key: string]: EntityRegistryDisplayEntry;
   };
   devices: { [key: string]: { area_id?: string; disabled_by?: string } };
 };
