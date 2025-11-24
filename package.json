@@ -64,7 +64,7 @@
     "build": "yarn run lint && yarn run test && yarn run rollup",
     "prettier-check": "yarn prettier . --check",
     "lint": "yarn run prettier-check && eslint src/*.ts",
-    "test": "jest",
+    "test": "jest --silent",
     "coverage": "jest --coverage",
     "rollup": "rollup -c"
   }
