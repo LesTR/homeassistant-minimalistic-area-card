@@ -55,7 +55,7 @@ export function filterStateConfigs(
       case 'regex':
         return String(currentValue).match(c.value) ? true : false;
       case 'template':
-        return evalTemplate(entity, c.value, hass) == true;
+        return getOrDefault(entity, c.value, hass, false) == true;
       case 'default':
         defaultValue = c;
         return false;
