@@ -28,7 +28,7 @@
     "@babel/plugin-transform-class-properties": "^7.27.1",
     "@babel/plugin-transform-runtime": "^7.28.3",
     "@babel/preset-env": "^7.27.2",
-    "@babel/preset-typescript": "^7.27.1",
+    "@babel/preset-typescript": "^7.28.5",
     "@babel/runtime": "^7.27.6",
     "@jest/globals": "^30.2.0",
     "@rollup/plugin-babel": "^6.0.4",
