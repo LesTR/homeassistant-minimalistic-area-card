@@ -153,6 +153,10 @@ describe('Templates tests', () => {
     },
     {
       current: 5,
+      config: [{ value: '${state.this-template-crash == "off"}', operator: 'template' }],
+    },
+    {
+      current: 5,
       config: [
         { value: 8, operator: '==' },
         { value: 3, operator: 'Default ' },
