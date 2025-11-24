@@ -185,6 +185,7 @@ describe('Templates tests', () => {
     { input: '${undefined}', entityId: null, defaultValue: false, expected: false },
     { input: '${null}', entityId: null, defaultValue: false, expected: false },
     { input: '${state}', entityId: 'binary_sensor.night', defaultValue: false, expected: 'off' },
+    { input: '${hass.states["not-existed-entity"].state === "off"}', defaultValue: false, expected: false },
   ])('getOrDefault input "%s"', ({ input, entityId, defaultValue, expected }) => {
     expect(getOrDefault(entityId, input, hass, defaultValue)).toBe(expected);
   });
