@@ -163,11 +163,18 @@ export function getOrDefault(
     return defaultValue;
   }
   if (typeof value === 'string') {
-    const templated = evalTemplate(entity, value, hass);
-    if (templated === undefined || templated === null) {
+    try {
+      const templated = evalTemplate(entity, value, hass);
+
+      if (templated === undefined || templated === null) {
+        return defaultValue;
+      } else {
+        return templated;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      console.error('Error in template %s: ', value, e);
       return defaultValue;
-    } else {
-      return templated;
     }
   }
   return value;
