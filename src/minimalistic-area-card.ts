@@ -434,15 +434,16 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
         hide_if_unavailable = this._getOrDefault(entityId, stateConfig.hide_unavailable, hide_if_unavailable);
       }
     }
+    const is_unavailable = !stateObj || stateObj.state === UNAVAILABLE;
 
-    if ((!stateObj || stateObj.state === UNAVAILABLE) && !hide_if_unavailable) {
+    if (hide || (is_unavailable && hide_if_unavailable)) {
+      return nothing;
+    } else if (is_unavailable && !hide_if_unavailable) {
       return html`
         <div class="wrapper">
           <hui-warning-element .label=${createEntityNotFoundWarning(this.hass, entityId)}></hui-warning-element>
         </div>
       `;
-    } else if (((!stateObj || stateObj.state === UNAVAILABLE) && hide_if_unavailable) || hide) {
-      return nothing;
     }
 
     const active = stateObj && stateObj.state && STATES_OFF.indexOf(stateObj.state.toString().toLowerCase()) === -1;

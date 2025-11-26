@@ -8,8 +8,10 @@ import {
   ExtendedEntityConfig,
   HomeAssistantExt,
   MinimalisticAreaCardConfig,
+  UNAVAILABLE,
 } from '../src/types';
 import { HassEntity } from 'home-assistant-js-websocket/dist/types';
+import { nothing } from 'lit-html';
 
 describe('Card test', () => {
   const card: MinimalisticAreaCard = new MinimalisticAreaCard();
@@ -25,8 +27,8 @@ describe('Card test', () => {
       navigation_path: '/dashboard-mobile/terrace',
     },
     entities: [
-      'sensor.terrace_climate_temperature_2',
-      'sensor.terrace_climate_humidity_2',
+      'sensor.terrace_climate_temperature',
+      'sensor.terrace_climate_humidity',
       {
         entity: 'sensor.watering_v2_battery',
         show_state: false,
@@ -78,11 +80,24 @@ describe('Card test', () => {
 
   const hass: HomeAssistantExt = {
     connected: true,
+    config: {
+      state: 'RUNNING',
+    },
     areas: {
       terrace: {
         area_id: 'terrace',
         name: 'Terrace',
         picture: '',
+      },
+    },
+    entities: {
+      'binary_sensor.night': {
+        device_id: 'device_binary_sensor_night',
+        area_id: 'terrace',
+      },
+      'sensor.currently_unavalaible': {
+        device_id: 'device_sensor_currently_unavalaible',
+        area_id: 'terrace',
       },
     },
     states: {
@@ -92,6 +107,12 @@ describe('Card test', () => {
       'vacuum.my_vacuum': {
         state: 'docked',
       },
+      'sensor.currently_unavalaible': {
+        state: UNAVAILABLE,
+      },
+    },
+    localize: (key) => {
+      return key;
     },
   } as unknown as HomeAssistantExt;
 
@@ -137,6 +158,55 @@ describe('Card test', () => {
         { entity: 'binary_sensor.night', section: EntitySection.auto },
       ]),
     );
+  });
+
+  test.each([
+    { entity: '' },
+    {
+      entity: 'binary_sensor.night',
+      hide: true,
+    },
+    {
+      entity: 'binary_sensor.night',
+      state: [
+        {
+          operator: 'default',
+          hide: true,
+        },
+      ],
+    },
+    {
+      entity: 'sensor.currently_unavalaible',
+      hide_unavailable: true,
+    },
+    {
+      entity: 'sensor.currently_unavalaible',
+      hide_unavailable: false,
+      hide: true,
+    },
+    {
+      entity: 'sensor.currently_unavalaible',
+      state: [
+        {
+          operator: 'default',
+          hide: true,
+        },
+      ],
+    },
+    {
+      entity: 'sensor.currently_unavalaible',
+      state: [
+        {
+          operator: 'default',
+          hide_unavailable: true,
+        },
+      ],
+    },
+  ])('Verify not rendering entities', (entityConf) => {
+    const conf: ExtendedEntityConfig = {
+      ...entityConf,
+    } as unknown as ExtendedEntityConfig;
+    expect(card['renderEntity'](conf)).toBe(nothing);
   });
 });
 
