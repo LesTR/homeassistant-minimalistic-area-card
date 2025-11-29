@@ -59,8 +59,8 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
   area: living_room # area id of an existing area defined in HA. (optional)
   camera_image: camera.living_room # a camera entity to use as background (optional)
   camera_view: 'auto' # auto, live (optional)
-  icon: mdi:sofa (optional) Override the area icon.
-  show_area_icon: true # boolean (optional), default false. Show the are icon in the title. The top-level option icon can override the icon.
+  icon: mdi:sofa #(optional) Override the area icon.
+  show_area_icon: true # boolean (optional), default false. Show the are icon in the title. The top-level option icon can override the icon defined in the area.
   shadow: true # Draws a drop shadow on icons (optional)
   hide_unavailable: false # Hide unavailable entities (optional, default false)
   state_color: true # enable or disable HA colors for all entities
@@ -94,6 +94,7 @@ For `tap_action` options, see <https://www.home-assistant.io/dashboards/actions/
       section: auto # define the section where to show given entity (optional), default 'auto', possible values: auto, sensors, buttons, title. Sensors means the first line, buttons the second one, title op.
       unit_of_measurement: "my unit" # overrides the units of entity. (optional, default empty). Useful when entity don't have attribute with units.
       hide_unavailable: false #Hide unavailable entities (optional, default false)
+      title: "Overrided title for this entity" # overrides entity title. (optional)
     - entity: switch.fireplace_on_off
     - entity: cover.window_covering
       tap_action:

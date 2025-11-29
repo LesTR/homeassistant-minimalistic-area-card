@@ -14,7 +14,7 @@ import {
   numberFormatToLocale,
   round,
 } from '@dermotduffy/custom-card-helpers'; // This is a community maintained npm module with common helper functions/types. https://github.com/custom-cards/custom-card-helpers
-import { css, CSSResultGroup, html, LitElement, nothing, PropertyValues } from 'lit';
+import { css, CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { styleMap } from 'lit-html/directives/style-map.js';
@@ -382,7 +382,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     return html` <ha-icon icon=${ifDefined(config.icon)}></ha-icon> `;
   }
 
-  private renderEntity(entityConf: ExtendedEntityConfig) {
+  private renderEntity(entityConf: ExtendedEntityConfig): any | TemplateResult {
     const stateObj = this.hass.states[entityConf.entity];
     if (stateObj == undefined) {
       return nothing;
@@ -447,7 +447,11 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     }
 
     const active = stateObj && stateObj.state && STATES_OFF.indexOf(stateObj.state.toString().toLowerCase()) === -1;
-    const title = `${stateObj.attributes?.friendly_name || entityId}: ${computeStateDisplay(this.hass?.localize, stateObj, this.hass?.locale)}`;
+    const title = this._getOrDefault(
+      entityId,
+      entityConf.title,
+      `${stateObj.attributes?.friendly_name || entityId}: ${computeStateDisplay(this.hass?.localize, stateObj, this.hass?.locale)}`,
+    );
 
     const isSensor = entityConf.section == EntitySection.sensors || SENSORS.indexOf(domain) !== -1;
 

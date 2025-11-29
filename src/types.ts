@@ -100,6 +100,7 @@ export type ExtendedEntityConfig = EntitiesCardEntityConfig & {
   section?: EntitySection;
   unit_of_measurement?: string;
   hide_unavailable?: boolean;
+  title?: string;
 };
 
 export type EntityStateConfig = {
