@@ -11,7 +11,7 @@ import {
   UNAVAILABLE,
 } from '../src/types';
 import { HassEntity } from 'home-assistant-js-websocket/dist/types';
-import { nothing } from 'lit-html';
+import { nothing, TemplateResult } from 'lit-html';
 
 describe('Card test', () => {
   const card: MinimalisticAreaCard = new MinimalisticAreaCard();
@@ -92,6 +92,8 @@ describe('Card test', () => {
     },
     entities: {
       'binary_sensor.night': {
+        entity_id: 'binary_sensor.night',
+        name: 'Night',
         device_id: 'device_binary_sensor_night',
         area_id: 'terrace',
       },
@@ -103,6 +105,10 @@ describe('Card test', () => {
     states: {
       'binary_sensor.night': {
         state: 'off',
+        entity_id: 'binary_sensor.night',
+        attributes: {
+          friendly_name: 'Night',
+        },
       },
       'vacuum.my_vacuum': {
         state: 'docked',
@@ -111,7 +117,7 @@ describe('Card test', () => {
         state: UNAVAILABLE,
       },
     },
-    localize: (key) => {
+    localize: (key, ..._) => {
       return key;
     },
   } as unknown as HomeAssistantExt;
@@ -207,6 +213,21 @@ describe('Card test', () => {
       ...entityConf,
     } as unknown as ExtendedEntityConfig;
     expect(card['renderEntity'](conf)).toBe(nothing);
+  });
+
+  test.each([
+    { title: undefined, expected: 'Night: component.binary_sensor.state._.off' },
+    { title: 'Title: my custom title', expected: 'Title: my custom title' },
+    { title: '${"Title: " + state}', expected: 'Title: off' },
+  ])('Verify entity title rendering', ({ title, expected }) => {
+    const conf: ExtendedEntityConfig = {
+      entity: 'binary_sensor.night',
+      title: title,
+    } as unknown as ExtendedEntityConfig;
+    const output = card['renderEntity'](conf);
+    expect(output).not.toBe(nothing);
+    const result = output as TemplateResult;
+    expect(result.values).toContain(expected);
   });
 });
 
