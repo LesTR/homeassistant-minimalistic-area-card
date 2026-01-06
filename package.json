@@ -49,7 +49,7 @@
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "prettier": "^3.7.4",
-    "rollup": "^4.54.0",
+    "rollup": "^4.55.1",
     "rollup-plugin-ignore": "^1.0.10",
     "rollup-plugin-serve": "^3.0.0",
     "ts-jest": "^29.4.6",
