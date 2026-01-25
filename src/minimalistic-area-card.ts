@@ -481,7 +481,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
             .color=${color}
           ></state-badge>
         </ha-icon-button>
-        ${isSensor && entityConf.show_state
+        ${currentState != null && isSensor && entityConf.show_state
           ? html`
               <div class="state">
                 ${entityConf.attribute
