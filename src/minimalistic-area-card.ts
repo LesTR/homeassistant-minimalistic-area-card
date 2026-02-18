@@ -316,7 +316,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
           ? html`<img
               src=${imageUrl}
               class=${classMap({
-                darken: this.config.darken_image === undefined ? false : this.config.darken_image,
+                darken: this._getOrDefault(null, this.config.darken_image, false),
               })}
             />`
           : null}
@@ -324,7 +324,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
           ? html`<div
               class=${classMap({
                 camera: true,
-                darken: this.config.darken_image === undefined ? false : this.config.darken_image,
+                darken: this._getOrDefault(null, this.config.darken_image, false),
               })}
             >
               <hui-image
