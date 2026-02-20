@@ -423,7 +423,10 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
       this._getOrDefault(entityId, this.config.hide_unavailable, false),
     );
 
-    const currentState = this.computeStateValue(stateObj, entityConf, entity);
+    let currentState = this.computeStateValue(stateObj, entityConf, entity);
+    if (currentState?.trim() == '') {
+      currentState = null;
+    }
 
     if (entityConf.state !== undefined && entityConf.state.length > 0) {
       const stateConfig = filterStateConfigs(entityId, entityConf.state, stateObj.state, this.hass);
