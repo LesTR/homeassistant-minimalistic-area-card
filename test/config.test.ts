@@ -1,11 +1,6 @@
 import { html } from 'lit-html';
 import { MinimalisticAreaCard } from '../src/minimalistic-area-card';
-import {
-  EntityRegistryDisplayEntry,
-  ExtendedEntityConfig,
-  HomeAssistantExt,
-  MinimalisticAreaCardConfig,
-} from '../src/types';
+import { ExtendedEntityConfig, HomeAssistantExt, MinimalisticAreaCardConfig } from '../src/types';
 
 const card: MinimalisticAreaCard = new MinimalisticAreaCard();
 
