@@ -92,6 +92,7 @@ export class MinimalisticAreaCard extends LitElement implements LovelaceCard {
     'scene',
     'todo',
     'plant',
+    'group',
   ];
   private _templatedEntityNameRegexp = RegExp(`["']((${this._domainsInTemplates.join('|')})[.][a-z_]+)["']`, 'gmsid');
   private configChanged = true;
