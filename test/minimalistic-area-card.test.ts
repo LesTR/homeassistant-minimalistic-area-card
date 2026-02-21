@@ -255,6 +255,7 @@ describe('Vefify entities', () => {
     'siren',
     'scene',
     'todo',
+    'group',
   ])('all domains are parsed properly in templates', (domain) => {
     const entity = domain + '.my_sensor';
     const card: MinimalisticAreaCard = new MinimalisticAreaCard();
